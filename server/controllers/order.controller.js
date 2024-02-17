@@ -38,13 +38,92 @@ exports.findAllByCustomer = async (req, res, next) => {
 exports.findAllByStatus = async (req, res, next) => {
   try {
     const { status } = req.params;
-    const response = await OrderSchema.find({
-      status: status,
-    })
-      .sort({
-        createdAt: -1,
-      })
-      .lean();
+    const response = await OrderSchema.aggregate([
+      {
+        $match: {
+          status: status,
+        },
+      },
+      {
+        $lookup: {
+          from: "customers",
+          localField: "customer_id",
+          foreignField: "_id",
+          as: "customer",
+        },
+      },
+      {
+        $unwind: "$customer",
+      },
+      {
+        $addFields: {
+          customer_name: "$customer.name",
+        },
+      },
+      {
+        $project: {
+          customer: 0,
+        },
+      },
+      {
+        $lookup: {
+          from: "dishes",
+          localField: "items.dish_id",
+          foreignField: "_id",
+          as: "dishes",
+        },
+      },
+      {
+        $addFields: {
+          items: {
+            $map: {
+              input: "$items",
+              in: {
+                $let: {
+                  vars: {
+                    d: {
+                      $arrayElemAt: [
+                        {
+                          $filter: {
+                            input: "$dishes",
+                            cond: {
+                              $eq: ["$$dish._id", "$$this.dish_id"],
+                            },
+                            as: "dish",
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                  },
+                  in: {
+                    $mergeObjects: [
+                      "$$this",
+                      {
+                        dish_name: "$$d.name",
+                        description: "$$d.description",
+                        category: "$$d.category",
+                        food_type: "$$d.food_type",
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          dishes: 0,
+        },
+      },
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
+    ]);
 
     return res.status(200).json(new ApiResponse(response, "Orders found", 200));
   } catch (err) {
