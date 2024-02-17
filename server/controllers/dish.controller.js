@@ -1,4 +1,5 @@
 const DishSchema = require("../models/dish.model");
+const InventorySchema = require("../models/inventory.model");
 const ApiError = require("../utils/ApiError");
 const ApiResponse = require("../utils/ApiResponse");
 
@@ -41,7 +42,49 @@ exports.create = async (req, res, next) => {
 
 exports.findAll = async (req, res, next) => {
   try {
-    const dishes = await DishSchema.find().sort({ createdAt: -1 }).lean();
+    const dishes = await DishSchema.aggregate([
+      {
+        $lookup: {
+          from: "inventories",
+          let: {
+            category: "$category",
+            food_type: "$food_type",
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$category", "$$category"] },
+                    { $eq: ["$food_type", "$$food_type"] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "inventory",
+        },
+      },
+      {
+        $addFields: {
+          in_stock: {
+            $cond: {
+              if: { $gt: [{ $size: "$inventory" }, 0] },
+              then: true,
+              else: false,
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          inventory: 0,
+        },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+    ]);
 
     return res.status(200).json(new ApiResponse(dishes, "Dishes found", 200));
   } catch (err) {

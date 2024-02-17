@@ -86,15 +86,3 @@ exports.deleteOne = async (req, res, next) => {
     next(err);
   }
 };
-
-exports.findByCategoryAndType = async (req, res, next) => {
-  try {
-    const response = await InventorySchema.find().group({
-      _id: { category: "$category", food_type: "$food_type" },
-    });
-
-    return res.status(200).json(new ApiResponse(response, "Items found", 200));
-  } catch (err) {
-    next(err);
-  }
-};

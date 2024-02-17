@@ -24,10 +24,6 @@ const DishSchema = new Schema(
       enum: ["veg", "non-veg", "jain"],
       required: [true, "Please add a food type"],
     },
-    // in_stock: {
-    //     type: Boolean,
-    //     default: true,
-    // },
     price: {
       original: {
         type: Number,
