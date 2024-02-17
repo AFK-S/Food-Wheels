@@ -27,3 +27,9 @@ select {
   border-radius: 10px !important;
   box-sizing: border-box;
 }
+
+.dashboard .order-cards {
+  width: 90%;
+  margin: 0 auto;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+}
