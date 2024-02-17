@@ -9,8 +9,9 @@ const {
   findAllByItem,
   feedback,
   rating,
-  todayOrders,
+  updateStatus,
 } = require("../controllers/order.controller");
+const { todayOrders } = require("../controllers/dashboard.controller");
 const fieldHandler = require("../middlewares/fieldHandler.middleware");
 
 const router = express.Router();
@@ -67,6 +68,14 @@ router.post(
   body("rating").trim().notEmpty().withMessage("Rating is required"),
   fieldHandler,
   rating
+);
+
+router.put(
+  "/status/:order_id",
+  param("order_id").trim().notEmpty().withMessage("Order ID is required"),
+  body("status").trim().notEmpty().withMessage("Status is required"),
+  fieldHandler,
+  updateStatus
 );
 
 router.get("/today/orders", todayOrders);
