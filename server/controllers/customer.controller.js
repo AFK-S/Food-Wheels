@@ -6,6 +6,14 @@ exports.register = async (req, res, next) => {
   try {
     const { name, email_address, password } = req.body;
 
+    const customerExists = await CustomerSchema.findOne({
+      email_address: email_address,
+    });
+
+    if (customerExists) {
+      throw new ApiError("Customer already exists", 400);
+    }
+
     const customer = await CustomerSchema.create({
       name: name,
       email_address: email_address,
