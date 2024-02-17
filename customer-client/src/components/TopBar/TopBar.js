@@ -46,9 +46,9 @@ const TopBar = ({ ToggleMenu, cart }) => {
         </div>
 
         <div className="d-flex align-items-center">
-          <div className="grey-btn me-2">
-            <div className="badge"></div>
-            <i class="fa-regular fa-bell"></i>
+          <div className="grey-btn me-2" onClick={() => navigate("/orders")}>
+            {/* <div className="badge"></div> */}
+            <i class="fa-solid fa-receipt"></i>
           </div>
           <div className="grey-btn" onClick={() => {
             navigate("/cart")

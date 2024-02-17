@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Home from "./Home.js";
 import Cart from "./Cart.js";
+import Orders from "./Orders.js";
 import TopBar from "../components/TopBar/TopBar.js";
 import "./Page.css";
 import { useStateContext } from "../context/StateContext.js";
@@ -32,6 +33,11 @@ const MainLayout = () => {
               path="/cart"
               index
               element={<Cart cart={cart} setCart={setCart} />}
+            />
+            <Route
+              path="/orders"
+              index
+              element={<Orders cart={cart} setCart={setCart} />}
             />
           </Routes>
         </div>

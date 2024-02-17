@@ -95,3 +95,14 @@
   border-radius: 14px;
   cursor: pointer;
 }
+
+.orders .order-cards {
+  background-color: #ececec;
+  border-radius: 18px;
+}
+
+.orders .order-cards .list {
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+}
