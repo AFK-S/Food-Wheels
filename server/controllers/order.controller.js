@@ -22,7 +22,7 @@ exports.create = async (req, res, next) => {
 
 exports.findAllByCustomer = async (req, res, next) => {
   try {
-    const { customer_id } = req.query;
+    const { customer_id } = req.params;
     const response = await OrderSchema.find({ customer_id: customer_id })
       .sort({
         createdAt: -1,
