@@ -30,5 +30,58 @@ select {
 .dashboard .order-cards {
   width: 90%;
   margin: 0 auto;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.09);
+}
+
+.dashboard .order-cards .order-list {
+  border-left: 1px solid #00000062;
+}
+
+.dashboard .order-cards .order-list p {
+  color: #00000062;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.dashboard .order-cards .timeline .dot {
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgba(117, 117, 117, 0.626);
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.dashboard .order-cards .timeline .dot.active {
+  background-color: rgb(86, 214, 0);
+  color: #000;
+}
+
+.dashboard .order-cards .timeline .line {
+  width: 30%;
+  height: 1px;
+  background-color: #9b9b9b4a;
+}
+
+.black-btn {
+  width: 100%;
+  background-color: black;
+  outline: none;
+  border-radius: 10px;
+  color: #fff;
+  border: 1px solid black;
+  text-align: center;
+  padding: 0.4rem;
+}
+
+.black-btn:hover {
+  background-color: #fff;
+  color: #000;
 }
