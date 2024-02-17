@@ -64,6 +64,16 @@ const Cart = ({ cart, setCart }) => {
                 <div>
                   <button
                     className="black-btn"
+                    style={{
+                      background: "transparent",
+                      color: "black",
+                      border: "1px solid black",
+                      width: "30px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      aspectRatio: "1/1",
+                    }}
                     onClick={() => {
                       setCart((prev) => prev.filter((_, i) => i !== index));
                     }}
@@ -76,6 +86,13 @@ const Cart = ({ cart, setCart }) => {
             </React.Fragment>
           );
         })}
+      </div>
+      <div className="d-flex flex-column">
+        <label htmlFor="instructions" className="fw-semibold">Instructions</label>
+        <input type="text" name="instructions" placeholder="add instructions (if any)" style={{
+          padding: "0.5rem",
+          borderRadius: "14px",
+        }} />
       </div>
 
       <div
