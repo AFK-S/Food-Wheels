@@ -1,14 +1,23 @@
 .topbar {
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 13px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  position: sticky;
+  top: 1rem;
+  transition: 0.3s ease-in-out;
+}
+
+.topbar.active {
+  background-color: #000;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .topbar .avatar {
-    width: 35px;
-    height: 35px;
-    overflow: hidden;
-    border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  overflow: hidden;
+  border-radius: 50%;
 }
