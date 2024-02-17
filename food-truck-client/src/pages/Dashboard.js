@@ -47,7 +47,7 @@ const Dashboard = () => {
       <div className="container-fluid dashboard">
         <div className="row">
           <div className="col-md-6 col-lg-8">
-            <div className="row">
+            <div className="row gy-3">
               <div className="col-md-4 c-card">
                 <h5>Orders completed</h5>
                 <div className="divider my-2"></div>
@@ -55,8 +55,8 @@ const Dashboard = () => {
                   90
                 </h1>
               </div>
-              <div className="col-md-8 ">
-                <div className="c-card">
+              <div className="col-md-8 p-0">
+                <div className="c-card ms-lg-3">
                   <h5>Recent Order</h5>
                   <div className="divider my-2"></div>
                   <h1 style={{ fontSize: "5rem" }} className="text-center">
@@ -101,7 +101,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          <div className="col-md-6 col-lg-4 h-100">
+          <div className="col-md-6 col-lg-4 h-100 p-0 ps-md-3 mt-3 mt-md-0">
             <div className="c-card order-view p-0" style={{ overflow: "hidden" }}>
               <div className="p-4 py-3 pb-2">
                 <h3>Orders Pending ({pendingOrders.length}) </h3>
