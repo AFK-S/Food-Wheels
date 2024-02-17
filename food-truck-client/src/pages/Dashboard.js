@@ -1,158 +1,47 @@
-import React, { useState } from "react";
-import { Badge } from '@mantine/core';
+import React, { useState, useEffect } from "react";
+import { Badge } from "@mantine/core";
+import axios from "axios";
 
 const Dashboard = () => {
-  const [status, setStatus] = useState(1);
+  const [pendingOrders, setPendingOrders] = useState([]);
+  const [completedOrders, setCompletedOrders] = useState([]);
 
-  const handleStatusChange = () => {
-    if (status === 3) {
-      return;
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    (async () => {
+      try {
+        const { data } = await axios.get("/api/order/today/orders", {
+          signal,
+        });
+        setPendingOrders(data.data?.order_pending || []);
+        setCompletedOrders(data.data?.order_completed || []);
+      } catch (err) {
+        if (err.name === "CanceledError") return;
+        alert(err.response?.data?.message || err.message || err);
+      }
+    })();
+    return () => controller.abort();
+  }, []);
+
+  const handleStatus = async (order_id, status) => {
+    try {
+      const { data } = await axios.put(`/api/order/status/${order_id}`, {
+        status: status === "placed" ? "preparing" : "delivered",
+      });
+      console.log(data);
+      setPendingOrders((prev) =>
+        prev.map((order) => {
+          if (order._id === order_id) {
+            order.status = status === "placed" ? "preparing" : "delivered";
+          }
+          return order;
+        })
+      );
+    } catch (err) {
+      alert(err.response?.data?.message || err.message || err);
     }
-    setStatus(status + 1);
   };
-
-  const orders = [
-    {
-      id: 1,
-      items: [
-        {
-          id: 1,
-          name: "Burger",
-          quantity: 1
-        },
-        {
-          id: 2,
-          name: "Pizza",
-          quantity: 1
-        },
-        {
-          id: 3,
-          name: "Burger",
-          quantity: 1
-        },
-        {
-          id: 4,
-          name: "Burger",
-          quantity: 1
-        }
-      ],
-      status: 1
-    }
-  ];
-
-  const scheduled_orders = [
-    {
-      id: 1,
-      time: "8:00 PM",
-      items: [
-        {
-          id: 1,
-          name: "Burger",
-          quantity: 1
-        },
-        {
-          id: 2,
-          name: "Pizza",
-          quantity: 1
-        },
-        {
-          id: 3,
-          name: "Burger",
-          quantity: 1
-        },
-        {
-          id: 4,
-          name: "Burger",
-          quantity: 1
-        }
-      ],
-      status: 1
-    },
-    {
-      id: 1,
-      time: "8:00 PM",
-      items: [
-        {
-          id: 1,
-          name: "Burger",
-          quantity: 1
-        },
-        {
-          id: 2,
-          name: "Pizza",
-          quantity: 1
-        },
-        {
-          id: 3,
-          name: "Burger",
-          quantity: 1
-        },
-        {
-          id: 4,
-          name: "Burger",
-          quantity: 1
-        }
-      ],
-      status: 1
-    },
-    {
-      id: 1,
-      time: "8:00 PM",
-      items: [
-        {
-          id: 1,
-          name: "Burger",
-          quantity: 1
-        },
-        {
-          id: 2,
-          name: "Pizza",
-          quantity: 1
-        },
-        {
-          id: 3,
-          name: "Burger",
-          quantity: 1
-        },
-        {
-          id: 4,
-          name: "Burger",
-          quantity: 1
-        }
-      ],
-      status: 1
-    },
-    {
-      id: 1,
-      time: "8:00 PM",
-      items: [
-        {
-          id: 1,
-          name: "Burger",
-          quantity: 1
-        },
-        {
-          id: 2,
-          name: "Pizza",
-          quantity: 1
-        },
-        {
-          id: 3,
-          name: "Burger",
-          quantity: 1
-        },
-        {
-          id: 4,
-          name: "Burger",
-          quantity: 1
-        }
-      ],
-      status: 1
-    },
-  ];
-
-  // Filter orders excluding those with status 3
-  const pendingOrders = orders.filter((order) => order.status !== 3);
 
   return (
     <>
@@ -164,39 +53,44 @@ const Dashboard = () => {
                 <h5>Orders completed</h5>
                 <div className="divider my-2"></div>
                 <h1 style={{ fontSize: "5rem" }} className="text-center">
-                  90
+                  {completedOrders.length}
                 </h1>
               </div>
               <div className="col-md-8 p-0">
                 <div className="c-card ms-lg-3">
                   <h5>Scheduled Order</h5>
                   <div className="divider my-2"></div>
-                  <div className="d-flex align-items-center justify-content-start" style={{
-                    width: "100%",
-                    overflowX: "auto",
-                  }}>
-
-                    {
-                      scheduled_orders.map((order) => {
-                        return <div key={order.id} className="c-card p-3 mt-3 sc-card m-0 me-3">
+                  <div
+                    className="d-flex align-items-center justify-content-start"
+                    style={{
+                      width: "100%",
+                      overflowX: "auto",
+                    }}
+                  >
+                    {completedOrders.map((order) => {
+                      return (
+                        <div
+                          key={order._id}
+                          className="c-card p-3 mt-3 sc-card m-0 me-3"
+                        >
                           <div className="d-flex align-items-center justify-content-between">
-                            <h6>Order ID : #{order.id}</h6>
-                            <Badge color="#000">{order.time}</Badge>
+                            <h6>Order ID : #{order._id}</h6>
+                            <Badge color="#000">{order.createdAt}</Badge>
                           </div>
-
 
                           <div className="divider my-2"></div>
                           <div className="order-list my-2 ps-2 ">
-                            {
-                              order.items.map((item) => {
-                                return <p key={item.id}>{item.name} (x {item.quantity})</p>;
-                              })
-                            }
+                            {order.items.map((item) => {
+                              return (
+                                <p key={item.dish_id}>
+                                  {item.dish_name} (x {item.quantity})
+                                </p>
+                              );
+                            })}
                           </div>
-                        </div>;
-                      }
-                      )
-                    }
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -238,42 +132,69 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="col-md-6 col-lg-4 h-100 p-0 ps-md-3 mt-3 mt-md-0">
-            <div className="c-card order-view p-0" style={{ overflow: "hidden" }}>
+            <div
+              className="c-card order-view p-0"
+              style={{ overflow: "hidden" }}
+            >
               <div className="p-4 py-3 pb-2">
                 <h3>Orders Pending ({pendingOrders.length}) </h3>
                 <div className="divider my-2"></div>
               </div>
-              <div className="orders-scroll" style={{ height: "87%", overflow: "auto" }}>
-                {pendingOrders.map((order) => (
-                  <div key={order.id} className="c-card mt-2 order-cards mb-4">
-                    <h6>Order ID : #{order.id}</h6>
-                    <div className="order-list my-2 ps-2 ms-2">
-                      {order.items.map((item) => (
-                        <p key={item.id}>
-                          {item.name} (x {item.quantity})
-                        </p>
-                      ))}
+              <div
+                className="orders-scroll"
+                style={{ height: "87%", overflow: "auto" }}
+              >
+                {pendingOrders.map((order) => {
+                  console.log(order);
+                  return (
+                    <div
+                      key={order._id}
+                      className="c-card mt-2 order-cards mb-4"
+                    >
+                      <h6>Order ID : #{order._id}</h6>
+                      <div className="order-list my-2 ps-2 ms-2">
+                        {order.items.map((item) => (
+                          <p key={item.dish_id}>
+                            {item.dish_name} (x {item.quantity})
+                          </p>
+                        ))}
+                      </div>
+                      <div className="timeline d-flex align-items-center justify-content-between mt-3">
+                        <div
+                          className={`dot ${
+                            order.status === "placed" ? "active" : ""
+                          }`}
+                        >
+                          <i className="fa-solid fa-hourglass-start"></i>
+                        </div>
+                        <div className="line"></div>
+                        <div
+                          className={`dot ${
+                            order.status === "preparing" ? "active" : ""
+                          }`}
+                        >
+                          <i className="fa-solid fa-box"></i>
+                        </div>
+                        <div className="line"></div>
+                        <div
+                          className={`dot ${
+                            order.status === "delivered" ? "active" : ""
+                          }`}
+                        >
+                          <i className="fa-solid fa-check"></i>
+                        </div>
+                      </div>
+                      {order.status !== "delivered" && (
+                        <button
+                          className="black-btn mt-3"
+                          onClick={() => handleStatus(order._id, order.status)}
+                        >
+                          Next
+                        </button>
+                      )}
                     </div>
-                    <div className="timeline d-flex align-items-center justify-content-between mt-3">
-                      <div className={`dot ${status >= 1 ? "active" : ""}`}>
-                        <i className="fa-solid fa-hourglass-start"></i>
-                      </div>
-                      <div className="line"></div>
-                      <div className={`dot ${status >= 2 ? "active" : ""}`}>
-                        <i className="fa-solid fa-box"></i>
-                      </div>
-                      <div className="line"></div>
-                      <div className={`dot ${status === 3 ? "active" : ""}`}>
-                        <i className="fa-solid fa-check"></i>
-                      </div>
-                    </div>
-                    {status !== 3 && (
-                      <button className="black-btn mt-3" onClick={handleStatusChange}>
-                        Next
-                      </button>
-                    )}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>
