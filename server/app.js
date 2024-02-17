@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const errorHandler = require("./middlewares/errorHandler.middleware");
 const IndexRoute = require("./routes/index.routes");
 const CookieRouter = require("./routes/cookie.routes");
+const DishRouter = require("./routes/dish.routes");
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(cookieParser());
 
 app.use("/api/field", IndexRoute);
 app.use("/api/cookie", CookieRouter);
+app.use("/api/dish", DishRouter);
 
 app.use(errorHandler);
 
