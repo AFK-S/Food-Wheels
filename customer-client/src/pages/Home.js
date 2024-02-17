@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
-import Burger from "../assets/Burger.png";
-import Pizza from "../assets/Pizza.png";
-import Pasta from "../assets/Pasta.png";
-import Fries from "../assets/Fries.png";
 import ItemInfoCard from "../components/ItemInfoCard/ItemInfoCard";
 import axios from "axios";
 
 const Home = ({ cart, setCart }) => {
   const [activeFilter, setActiveFilter] = useState("All");
-  const [setsearchQuery, setSetsearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [currSelectedItem, setCurrSelectedItem] = useState(null);
   const [infoMenu, setInfoMenu] = useState();
   const colors = [
@@ -36,15 +32,7 @@ const Home = ({ cart, setCart }) => {
   const image3 =
     "https://lh3.googleusercontent.com/PlzkCU1UbJk45WD-8VjHSp_rmoJX3bUKKUDcoo97dcKivVWqFIVI7gDkwX_E1fWAMSWU1Htc-kIYegCmDrlkeHGv9pBybw3zw22ehB4P=s750";
 
-  const filters = [
-    "All",
-    "Burger",
-    "Pizza",
-    "Pasta",
-    "Burger",
-    "Pizza",
-    "Pasta",
-  ];
+  const filters = ["All", "Veg", "Non-Veg", "Jain"];
 
   const [dishes, setDishes] = useState([]);
 
@@ -69,7 +57,13 @@ const Home = ({ cart, setCart }) => {
     <div className="home py-2">
       <div className="search-bar p-2 px-3">
         <i className="fa-solid fa-magnifying-glass"></i>
-        <input type="text" placeholder="Search" className="ms-2" />
+        <input
+          type="text"
+          placeholder="Search"
+          className="ms-2"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </div>
 
       <div className="carousel my-3">
@@ -130,45 +124,59 @@ const Home = ({ cart, setCart }) => {
 
       <div className="menu-items container-fluid p-0">
         <div className="row gy-4">
-          {dishes.map((item, index) => (
-            <div
-              className="col-6"
-              key={index}
-              onClick={(e) => {
-                e.preventDefault();
-                setCurrSelectedItem(item);
-                setInfoMenu(true);
-              }}
-            >
+          {dishes
+            .filter((item) => {
+              // Apply filter
+              if (activeFilter === "All") return true;
+              return item.food_type === activeFilter.toLowerCase();
+            })
+            .filter((item) => {
+              // Apply search query filter
+              return item.name
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase());
+            })
+            .map((item, index) => (
               <div
-                className="menu-card"
-                style={{
-                  backgroundColor:
-                    colors[Math.floor(Math.random() * colors.length)],
+                className="col-6"
+                key={index}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setCurrSelectedItem(item);
+                  setInfoMenu(true);
                 }}
               >
-                <img src={item.image.url} alt="" className="img-fluid mt-2" />
-                <p className="mt-4 mb-2 px-1">{item.name}</p>
-                <div className="details  d-flex align-items-center px-1">
-                  <div>
-                    <h5 style={{ fontWeight: 600 }}>₹{item.price.original}</h5>
+                <div
+                  className="menu-card"
+                  style={{
+                    backgroundColor:
+                      colors[Math.floor(Math.random() * colors.length)],
+                  }}
+                >
+                  <img src={item.image.url} alt="" className="img-fluid mt-2" />
+                  <p className="mt-4 mb-2 px-1">{item.name}</p>
+                  <div className="details  d-flex align-items-center px-1">
+                    <div>
+                      <h5 style={{ fontWeight: 600 }}>
+                        ₹{item.price.original}
+                      </h5>
+                    </div>
+                    <div className="ms-1">
+                      <s>
+                        <p style={{ fontSize: "10px" }}>
+                          ₹{item.price.discounted}
+                        </p>
+                      </s>
+                    </div>
                   </div>
-                  <div className="ms-1">
-                    <s>
-                      <p style={{ fontSize: "10px" }}>
-                        ₹{item.price.discounted}
-                      </p>
-                    </s>
+                  <div className="add-to">
+                    <button>
+                      <i className="fa-solid fa-plus m-0 p-0"></i>
+                    </button>
                   </div>
-                </div>
-                <div className="add-to">
-                  <button>
-                    <i className="fa-solid fa-plus m-0 p-0"></i>
-                  </button>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
           <ItemInfoCard
             item={currSelectedItem}
             infoMenu={infoMenu}
