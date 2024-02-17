@@ -7,56 +7,49 @@ import { logoutUser } from "../../slice/UserSlice.js";
 import { useCookies } from "react-cookie";
 
 const SideNavigation = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [cookies, removeCookie] = useCookies(["token", "userId"]);
-  const handleLogout = () => {
-    removeCookie("token");
-    removeCookie("userId");
-    dispatch(logoutUser());
-    window.location.href = "/login";
-  };
+  // const handleLogout = () => {
+  //   removeCookie("token");
+  //   removeCookie("userId");
+  //   dispatch(logoutUser());
+  //   window.location.href = "/login";
+  // };
 
   const navs = [
-    {
-      name: "Home",
-      path: "",
-      icon: "fa-solid fa-house",
-    },
     {
       name: "Dashboard",
       path: "/dashboard",
       icon: "fa-solid fa-display",
     },
     {
-      name: "Trainers",
-      path: "/trainers",
-      icon: "fa-solid fa-house",
+      name: "Feedbacks",
+      path: "/feedbacks",
+      icon: "fa-solid fa-comments",
     },
     {
-      name: "Member Info",
-      path: "/member-info",
-      icon: "fa-solid fa-house",
+      name: "Inventory",
+      path: "/inventory",
+      icon: "fa-solid fa-boxes",
     },
     {
-      name: "Edit Plans",
-      path: "/plans",
-      icon: "fa-solid fa-house",
+      name: "Route",
+      path: "/route",
+      icon: "fa-solid fa-route",
     },
     {
-      name: "Get Invoice",
-      path: "/invoice",
-      icon: "fa-solid fa-house",
+      name: "Statistics",
+      path: "/statistics",
+      icon: "fa-solid fa-chart-simple",
     },
   ];
 
   return (
     <div className="navigation rounded p-3 d-flex flex-column">
       <div style={{ overflow: "auto" }}>
-        {navs.map((e) => {
+        {navs.map((e, index) => {
           const { name, path, icon } = e;
           return (
-            <NavLink to={path} className="navlink my-2 rounded-s ">
+            <NavLink to={path} className="navlink my-2 rounded-s" key={index}>
               <i className={`me-2 ms-2 ${icon}`}></i>
               <p>{name}</p>
             </NavLink>
@@ -66,13 +59,13 @@ const SideNavigation = () => {
 
       <div>
         <div className="divider my-3"></div>
-        <NavLink to="/new-member" className="navlink my-2 rounded-s ">
+        {/* <NavLink to="/new-member" className="navlink my-2 rounded-s ">
           <i className="fa-solid fa-user-plus me-2 ms-2"></i>
           <p>New Member</p>
-        </NavLink>
+        </NavLink> */}
         <button
           className="logout-btn flexbox px-3 p-2 w-100 rounded-s"
-          onClick={handleLogout}
+          // onClick={handleLogout}
         >
           <i className="fa-solid fa-arrow-right-from-bracket me-2 ms-2"></i>
           <p>Logout</p>

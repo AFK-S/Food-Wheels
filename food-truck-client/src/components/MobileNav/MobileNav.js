@@ -18,35 +18,30 @@ const MobileNav = ({ isMenuOpen, ToggleMenu }) => {
 
   const navs = [
     {
-      name: "Home",
-      path: "",
-      icon: "fa-solid fa-house",
-    },
-    {
       name: "Dashboard",
       path: "/dashboard",
       icon: "fa-solid fa-display",
     },
     {
-      name: "Member Info",
-      path: "/member-info",
-      icon: "fa-solid fa-user",
+      name: "Feedbacks",
+      path: "/feedbacks",
+      icon: "fa-solid fa-comments",
     },
     {
-      name: "Edit Plans",
-      path: "/edit-plans",
+      name: "Inventory",
+      path: "/inventory",
+      icon: "fa-solid fa-boxes",
+    },
+    {
+      name: "Route",
+      path: "/route",
+      icon: "fa-solid fa-route",
+    },
+    {
+      name: "Statistics",
+      path: "/statistics",
       icon: "fa-solid fa-chart-simple",
     },
-    {
-      name: "Attendance",
-      path: "/attendance",
-      icon: "fa-solid fa-user-clock",
-    },
-    // {
-    //   name: "Get Invoice",
-    //   path: "/invoice",
-    //   icon: "fa-solid fa-file-invoice",
-    // },
   ];
 
   return (
@@ -97,14 +92,14 @@ const MobileNav = ({ isMenuOpen, ToggleMenu }) => {
 
         <div className="pb-4">
           <div className="divider my-3"></div>
-          <NavLink
+          {/* <NavLink
             to="/new-member"
             className="navlink my-2 rounded-s"
             onClick={ToggleMenu}
           >
             <i className="fa-solid fa-user-plus me-2 ms-2"></i>
             <p>New Member</p>
-          </NavLink>
+          </NavLink> */}
           <button
             className="logout-btn flexbox px-3 p-2 w-100 rounded-s"
             // onClick={handleLogout}
