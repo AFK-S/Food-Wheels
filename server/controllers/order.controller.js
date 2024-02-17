@@ -42,7 +42,9 @@ exports.findAllByStatus = async (req, res, next) => {
     const response = await OrderSchema.aggregate([
       {
         $match: {
-          status: status,
+          status: {
+            $ne: status,
+          },
         },
       },
       {

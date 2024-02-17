@@ -6,6 +6,7 @@ const errorHandler = require("./middlewares/errorHandler.middleware");
 const DishRouter = require("./routes/dish.routes");
 const OrderRouter = require("./routes/order.routes");
 const CustomerRouter = require("./routes/customer.routes");
+const InventoryRouter = require("./routes/inventory.routes");
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(cookieParser());
 app.use("/api/dish", DishRouter);
 app.use("/api/order", OrderRouter);
 app.use("/api/customer", CustomerRouter);
+app.use("/api/inventory", InventoryRouter);
 
 app.use(errorHandler);
 
