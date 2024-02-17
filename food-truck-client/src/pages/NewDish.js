@@ -11,11 +11,18 @@ import { useForm } from "@mantine/form";
 import axios from "axios";
 
 const NewDish = () => {
-  const category = ["starter", "main course", "dessert"];
-
+  const category = [
+    "burger",
+    "pizza",
+    "pasta",
+    "fries",
+    "ice-cream",
+    "donut",
+  ];
   const food_type = ["veg", "non-veg", "jain"];
 
   const [image, setImage] = useState();
+
   const form = useForm({
     initialValues: {
       name: "",
