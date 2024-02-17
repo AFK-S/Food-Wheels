@@ -16,7 +16,7 @@ const DishSchema = new Schema(
       required: [true, "Please add a category"],
     },
     image: {
-      type: String,
+      type: Object,
       required: [true, "Please add an image"],
     },
     food_type: {
