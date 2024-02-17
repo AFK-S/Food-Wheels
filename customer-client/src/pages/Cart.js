@@ -1,7 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useCookies } from "react-cookie";
 
 const Cart = ({ cart, setCart }) => {
+  const [cookies] = useCookies(["customer_id"]);
   const navigate = useNavigate();
   // Function to calculate the total price of items in the cart
   const calculateTotalPrice = () => {
@@ -10,6 +13,27 @@ const Cart = ({ cart, setCart }) => {
       totalPrice += item.price.discounted || item.price.original;
     });
     return totalPrice;
+  };
+
+  const handleBookNow = async () => {
+    try {
+      const { data } = await axios.post("/api/order", {
+        customer_id: cookies.customer_id,
+        items: cart.map((item) => {
+          return {
+            dish_id: item._id,
+            quantity: 1,
+            billing_price: item.price.discounted || item.price.original,
+          };
+        }),
+        total: calculateTotalPrice(),
+      });
+      console.log(data.data);
+      setCart([]);
+      navigate("/");
+    } catch (err) {
+      alert(err.response?.data?.message || err.message || err);
+    }
   };
 
   return (
@@ -73,11 +97,7 @@ const Cart = ({ cart, setCart }) => {
           style={{
             width: "100%",
           }}
-          onClick={() => {
-            alert("Booking successful!");
-            setCart([]);
-            navigate("/");
-          }}
+          onClick={handleBookNow}
         >
           Book Now
         </button>
