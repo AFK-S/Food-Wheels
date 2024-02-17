@@ -4,7 +4,7 @@ import "./TopBar.css";
 const TopBar = ({ ToggleMenu }) => {
   return (
     <>
-      <div className="topbar container-fluid mb-3 p-2 px-md-3">
+      <div className="topbar container-fluid py-3  py-md-2 mb-3 p-2 px-md-3 ">
         <div className="row w-100 flexbox">
           <div className="col-9 col-md-10 d-flex align-items-center ">
             <i
