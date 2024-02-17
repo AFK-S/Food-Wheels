@@ -14,7 +14,7 @@ exports.create = async (req, res, next) => {
       is_signature,
     } = req.body;
 
-    if (!req.image_url) {
+    if (!req.coverImage) {
       throw new ApiError("Dish image is required", 400, "ImageError");
     }
 
@@ -22,7 +22,7 @@ exports.create = async (req, res, next) => {
       name: name,
       description: description,
       category: category,
-      image: req.image_url,
+      image: req.coverImage,
       food_type: food_type,
       price: {
         original: price,
@@ -44,7 +44,7 @@ exports.findAll = async (req, res, next) => {
     const dishes = await DishSchema.find().sort({ createdAt: -1 }).lean();
 
     if (!dishes) {
-      throw new ApiError([], 404, "DishesNotFound");
+      throw new ApiError("Dishes not found", 404, "DishesNotFound");
     }
 
     return res.status(200).json(new ApiResponse(dishes, "Dishes found", 200));
@@ -62,7 +62,7 @@ exports.findOne = async (req, res, next) => {
       .lean();
 
     if (!response) {
-      throw new ApiError(null, 404, "DishNotFound");
+      throw new ApiError("DIsh Not FOund", 404, "DishNotFound");
     }
 
     return res.status(200).json(new ApiResponse(response, "Dish found", 200));
@@ -75,13 +75,15 @@ exports.deleteOne = async (req, res, next) => {
   try {
     const { dish_id } = req.params;
 
-    const response = await DishSchema.findByIdAndRemove(dish_id);
+    const response = await DishSchema.findByIdAndDelete(dish_id);
 
     if (!response) {
-      throw new ApiError([], 404, "DishNotFound");
+      throw new ApiError("Dish Not Found", 404, "DishNotFound");
     }
 
-    return res.status(200).json(new ApiResponse(null, "Dish deleted", 200));
+    res.status(200).json(new ApiResponse(null, "Dish deleted", 200));
+    req.public_id = response.image.public_id;
+    next();
   } catch (err) {
     next(err);
   }

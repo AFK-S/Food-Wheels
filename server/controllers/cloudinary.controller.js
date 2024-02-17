@@ -1,5 +1,8 @@
 const ApiError = require("../utils/ApiError");
-const { uploadOnCloudinary } = require("../config/cloudinary.js");
+const {
+  uploadOnCloudinary,
+  deleteFromCloudinary,
+} = require("../config/cloudinary.js");
 
 exports.uploadAvatar = async (req, res, next) => {
   try {
@@ -13,8 +16,28 @@ exports.uploadAvatar = async (req, res, next) => {
       throw new ApiError("Error while uploading on avatar", 400, "UploadError");
     }
 
-    req.image_url = avatar.url;
+    req.coverImage = avatar;
     return next();
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.deleteAvatar = async (req, res, next) => {
+  try {
+    if (!req.public_id) {
+      throw new ApiError("Cover Image is missing", 400, "ImageUrlError");
+    }
+
+    const response = await deleteFromCloudinary(req.public_id);
+    if (response.result !== "ok") {
+      throw new ApiError(
+        "Something went wrong while deleting cover image",
+        400,
+        "DeleteError"
+      );
+    }
+    return;
   } catch (err) {
     next(err);
   }
