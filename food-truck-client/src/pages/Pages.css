@@ -30,7 +30,8 @@ select {
 .dashboard .order-cards {
   width: 90%;
   margin: 0 auto;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.09);
+  border: 1px solid #00000034;
+  border-radius: 16px;
 }
 
 .dashboard .order-cards .order-list {
@@ -60,8 +61,8 @@ select {
 }
 
 .dashboard .order-cards .timeline .dot.active {
-  background-color: rgb(86, 214, 0);
-  color: #000;
+  background-color: rgb(0, 0, 0);
+  color: #fff;
 }
 
 .dashboard .order-cards .timeline .line {
