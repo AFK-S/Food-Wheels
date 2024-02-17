@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./TopBar.css";
 import { Avatar } from '@mantine/core';
+import { useNavigate } from "react-router-dom";
 
-const TopBar = ({ ToggleMenu }) => {
+const TopBar = ({ ToggleMenu, cart }) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,9 +45,35 @@ const TopBar = ({ ToggleMenu }) => {
           </div>
         </div>
 
-        <div className="grey-btn">
-          <div className="badge"></div>
-          <i class="fa-regular fa-bell"></i>
+        <div className="d-flex align-items-center">
+          <div className="grey-btn me-2">
+            <div className="badge"></div>
+            <i class="fa-regular fa-bell"></i>
+          </div>
+          <div className="grey-btn" onClick={() => {
+            navigate("/cart")
+          }}>
+            <div style={{
+              backgroundColor: "yellow",
+              borderRadius: "50%",
+              position: "absolute",
+              top: "-5px",
+              right: "-5px",
+              display: "flex !important",
+              justifyContent: "center",
+              alignItems: "center",
+              color: "black",
+              fontSize: "0.8rem",
+              transform: "scale(1)",
+              fontWeight: "600",
+              width: "20px",
+              height: "20px",
+              textAlign: "center",
+            }}>
+              {cart?.length}
+            </div>
+            <i class="fa-solid fa-cart-shopping"></i>
+          </div>
         </div>
       </div>
     </>

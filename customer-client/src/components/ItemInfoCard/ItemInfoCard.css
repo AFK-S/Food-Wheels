@@ -1,0 +1,13 @@
+.infoMenu {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  background-color: rgb(255, 255, 255);
+  border-radius: 30px 30px 0 0;
+  transform: translateY(100%);
+  transition: all 0.3s ease;
+}
+
+.infoMenu.active {
+  transform: translateY(0);
+}

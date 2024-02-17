@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
-import { SafeAreaView, ScrollView, StyleSheet, Text, View, StatusBar } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View, StatusBar, LogBox } from "react-native";
 import { WebView } from "react-native-webview";
 
 Notifications.setNotificationHandler({
@@ -11,6 +11,8 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
+
+// LogBox.ignoreLogs(["Setting a timer for a long period of time"]);
 
 export default function App() {
   const notificationListener = useRef();
@@ -45,8 +47,11 @@ export default function App() {
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="black" />
-      <SafeAreaView style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
+      <SafeAreaView style={{ flex: 1 }}
+        scalesPageToFit={false}
+      >
         <WebView
+          showsVerticalScrollIndicator={false}
           scalesPageToFit={false}
           mixedContentMode="compatibility"
           onMessage={onMessage}
