@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "@mantine/form";
 import {
   TextInput,
@@ -14,21 +14,21 @@ import {
 } from "@mantine/core";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
-import { Notification } from "@mantine/core";
-import { IconCheck, IconX } from "@tabler/icons-react";
 import { Loader } from "@mantine/core";
+import { useStateContext } from "../context/StateContext";
 import { useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
-import { SERVER_URL } from "../config";
 
 export default function Login(PaperProps) {
-  const [loading, setLoading] = useState(false);
-  const [notificationVisible, setNotificationVisible] = useState({
-    visible: false,
-    type: "",
-    message: "",
-  });
+  const { isLogin, setIsLogin } = useStateContext();
   const Navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLogin) {
+      Navigate("/");
+    }
+  }, []);
+
+  const [loading, setLoading] = useState(false);
   const form = useForm({
     initialValues: {
       email: "",
@@ -44,75 +44,24 @@ export default function Login(PaperProps) {
     },
   });
 
-  const [cookies, setCookie] = useCookies(["token", "userId"]);
-
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      const { data } = await axios.post(`${SERVER_URL}/auth/login`, values);
-      setNotificationVisible({
-        title: "LoggedIn successfully",
-        visible: true,
-        color: "green",
-        icon: <IconCheck />,
-        message: `Welcome ${data.name}`,
+      await axios.post("api/customer/login", {
+        email_address: values.email,
+        password: values.password,
       });
-      setCookie("token", data.token, {
-        path: "/",
-        maxAge: 604800,
-        expires: new Date(Date.now() + 604800),
-        sameSite: true,
-      });
-      setCookie("userId", data.id, {
-        path: "/",
-        maxAge: 604800,
-        expires: new Date(Date.now() + 604800),
-        sameSite: true,
-      });
-      setTimeout(() => {
-        Navigate("/");
-      }, 1000);
+      setIsLogin(true);
+      form.reset();
+      Navigate("/");
     } catch (err) {
-      console.log(err.response);
-      setNotificationVisible({
-        title: "Something went wrong",
-        visible: true,
-        color: "red",
-        icon: <IconX />,
-        message: err.response.data.msg,
-      });
+      alert(err.response?.data?.message || err.message || err);
     }
     setLoading(false);
-    form.reset();
-    setTimeout(() => {
-      setNotificationVisible({
-        visible: false,
-        type: "",
-        message: "",
-      });
-    }, 3000);
   };
 
   return (
     <div className="login">
-      {notificationVisible.visible && (
-        <Notification
-          style={{ zIndex: 1000, position: "fixed", top: 20, right: 20 }}
-          title={notificationVisible.title}
-          color={notificationVisible.color}
-          icon={notificationVisible.icon}
-          onClose={() =>
-            setNotificationVisible({
-              visible: false,
-              type: "",
-              message: "",
-            })
-          }
-          withCloseButton
-        >
-          {notificationVisible.message}
-        </Notification>
-      )}
       <Paper
         radius="md"
         p="xl"
@@ -131,7 +80,6 @@ export default function Login(PaperProps) {
         <form
           onSubmit={form.onSubmit((value) => {
             handleSubmit(value);
-            // form.reset();
           })}
         >
           <Stack>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "@mantine/form";
 import {
   TextInput,
@@ -13,20 +13,21 @@ import {
 } from "@mantine/core";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
-import { SERVER_URL } from "../config.js";
-import { Notification } from "@mantine/core";
-import { IconCheck, IconX } from "@tabler/icons-react";
 import { Loader } from "@mantine/core";
+import { useStateContext } from "../context/StateContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Register(PaperProps) {
-  const [loading, setLoading] = useState(false);
-  const [notificationVisible, setNotificationVisible] = useState({
-    visible: false,
-    type: "",
-    message: "",
-  });
+  const { isLogin, setIsLogin } = useStateContext();
   const Navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLogin) {
+      Navigate("/");
+    }
+  }, []);
+
+  const [loading, setLoading] = useState(false);
   const form = useForm({
     initialValues: {
       email: "",
@@ -46,56 +47,23 @@ export default function Register(PaperProps) {
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      const { data } = await axios.post(`${SERVER_URL}/auth/register`, values);
-      setNotificationVisible({
-        title: "User created successfully",
-        visible: true,
-        color: "green",
-        icon: <IconCheck />,
-        message: data.message,
+      await axios.post("/api/customer/register", {
+        email_address: values.email,
+        name: values.name,
+        password: values.password,
       });
-      setTimeout(() => {
-        Navigate("/login");
-      }, 3000);
+
+      setIsLogin(true);
+      form.reset();
+      Navigate("/");
     } catch (err) {
-      setNotificationVisible({
-        title: "Something went wrong",
-        visible: true,
-        color: "red",
-        icon: <IconX />,
-        message: err.response.data.message,
-      });
+      alert(err.response?.data?.message || err.message || err);
     }
     setLoading(false);
-    setTimeout(() => {
-      setNotificationVisible({
-        visible: false,
-        type: "",
-        message: "",
-      });
-    }, 3000);
   };
 
   return (
     <div className="login">
-      {notificationVisible.visible && (
-        <Notification
-          style={{ zIndex: 1000, position: "fixed", top: 20, right: 20 }}
-          title={notificationVisible.title}
-          color={notificationVisible.color}
-          icon={notificationVisible.icon}
-          onClose={() =>
-            setNotificationVisible({
-              visible: false,
-              type: "",
-              message: "",
-            })
-          }
-          withCloseButton
-        >
-          {notificationVisible.message}
-        </Notification>
-      )}
       <Paper
         radius="md"
         p="xl"
@@ -106,15 +74,13 @@ export default function Register(PaperProps) {
         }}
       >
         <Text size="lg" weight={500}>
-          Register for Inked Pages
+          Join us
         </Text>
-
         <Divider my="lg"></Divider>
 
         <form
           onSubmit={form.onSubmit((value) => {
             handleSubmit(value);
-            form.reset();
           })}
         >
           <Stack>
