@@ -4,22 +4,29 @@ const ApiResponse = require("../utils/ApiResponse");
 
 exports.create = async (req, res, next) => {
   try {
-    const { name, description, category, food_type, price, is_signature } =
-      req.body;
-    const { original, discounted } = price;
+    const {
+      name,
+      description,
+      category,
+      food_type,
+      price,
+      discount,
+      is_signature,
+    } = req.body;
+
     if (!req.image_url) {
       throw new ApiError("Dish image is required", 400, "ImageError");
     }
 
-    const dish = await new DishSchema.create({
+    const dish = await DishSchema.create({
       name: name,
       description: description,
       category: category,
       image: req.image_url,
       food_type: food_type,
       price: {
-        original: original,
-        discounted: discounted,
+        original: price,
+        discounted: discount,
       },
       is_signature: is_signature,
     });

@@ -17,7 +17,7 @@ const uploadOnCloudinary = async (localFilePath) => {
     if (!localFilePath) return null;
     const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
-      upload_preset: "Food-Wheels",
+      upload_preset: "FoodWheels",
     });
     fs.unlinkSync(localFilePath);
     return response;
