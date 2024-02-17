@@ -161,7 +161,9 @@ const NewDish = () => {
             </div>
 
             <Group justify="flex-end">
-              <Button type="submit" className="mt-3">
+              <Button type="submit" className="black-btn mt-3" style={{
+                width: "100px"
+              }}>
                 Submit
               </Button>
             </Group>

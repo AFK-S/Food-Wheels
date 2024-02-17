@@ -40,7 +40,7 @@ const Feedback = () => {
               </p>
               <p className="card-text mt-3">{feedback.comment}</p>
             </div>
-            <div className="input-div d-flex align-items-center justify-content-between mt-3">
+            {/* <div className="input-div d-flex align-items-center justify-content-between mt-3">
               <input type="text" placeholder="add your comment" />
               <button className="black-btn" style={{
                 height: "40px",
@@ -51,7 +51,7 @@ const Feedback = () => {
               }}>
                 <i class="fa-regular fa-paper-plane"></i>
               </button>
-            </div>
+            </div> */}
           </div>
         </div>;
       })}

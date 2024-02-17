@@ -86,3 +86,12 @@ select {
   background-color: #fff;
   color: #000;
 }
+
+.sc-card {
+  min-width: 250px !important;
+  margin: 0 auto;
+  border: 1px solid #00000034;
+  border-radius: 16px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}

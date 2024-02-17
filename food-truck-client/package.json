@@ -2,7 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8000/",
+  "proxy": "http://10.120.116.113:8000/",
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@mantine/core": "^6.0.9",

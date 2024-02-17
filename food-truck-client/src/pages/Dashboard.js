@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Badge } from '@mantine/core';
 
 const Dashboard = () => {
   const [status, setStatus] = useState(1);
@@ -39,6 +40,117 @@ const Dashboard = () => {
     }
   ];
 
+  const scheduled_orders = [
+    {
+      id: 1,
+      time: "8:00 PM",
+      items: [
+        {
+          id: 1,
+          name: "Burger",
+          quantity: 1
+        },
+        {
+          id: 2,
+          name: "Pizza",
+          quantity: 1
+        },
+        {
+          id: 3,
+          name: "Burger",
+          quantity: 1
+        },
+        {
+          id: 4,
+          name: "Burger",
+          quantity: 1
+        }
+      ],
+      status: 1
+    },
+    {
+      id: 1,
+      time: "8:00 PM",
+      items: [
+        {
+          id: 1,
+          name: "Burger",
+          quantity: 1
+        },
+        {
+          id: 2,
+          name: "Pizza",
+          quantity: 1
+        },
+        {
+          id: 3,
+          name: "Burger",
+          quantity: 1
+        },
+        {
+          id: 4,
+          name: "Burger",
+          quantity: 1
+        }
+      ],
+      status: 1
+    },
+    {
+      id: 1,
+      time: "8:00 PM",
+      items: [
+        {
+          id: 1,
+          name: "Burger",
+          quantity: 1
+        },
+        {
+          id: 2,
+          name: "Pizza",
+          quantity: 1
+        },
+        {
+          id: 3,
+          name: "Burger",
+          quantity: 1
+        },
+        {
+          id: 4,
+          name: "Burger",
+          quantity: 1
+        }
+      ],
+      status: 1
+    },
+    {
+      id: 1,
+      time: "8:00 PM",
+      items: [
+        {
+          id: 1,
+          name: "Burger",
+          quantity: 1
+        },
+        {
+          id: 2,
+          name: "Pizza",
+          quantity: 1
+        },
+        {
+          id: 3,
+          name: "Burger",
+          quantity: 1
+        },
+        {
+          id: 4,
+          name: "Burger",
+          quantity: 1
+        }
+      ],
+      status: 1
+    },
+  ];
+
   // Filter orders excluding those with status 3
   const pendingOrders = orders.filter((order) => order.status !== 3);
 
@@ -57,11 +169,35 @@ const Dashboard = () => {
               </div>
               <div className="col-md-8 p-0">
                 <div className="c-card ms-lg-3">
-                  <h5>Recent Order</h5>
+                  <h5>Scheduled Order</h5>
                   <div className="divider my-2"></div>
-                  <h1 style={{ fontSize: "5rem" }} className="text-center">
-                    90
-                  </h1>
+                  <div className="d-flex align-items-center justify-content-start" style={{
+                    width: "100%",
+                    overflowX: "auto",
+                  }}>
+
+                    {
+                      scheduled_orders.map((order) => {
+                        return <div key={order.id} className="c-card p-3 mt-3 sc-card m-0 me-3">
+                          <div className="d-flex align-items-center justify-content-between">
+                            <h6>Order ID : #{order.id}</h6>
+                            <Badge color="#000">{order.time}</Badge>
+                          </div>
+
+
+                          <div className="divider my-2"></div>
+                          <div className="order-list my-2 ps-2 ">
+                            {
+                              order.items.map((item) => {
+                                return <p key={item.id}>{item.name} (x {item.quantity})</p>;
+                              })
+                            }
+                          </div>
+                        </div>;
+                      }
+                      )
+                    }
+                  </div>
                 </div>
               </div>
             </div>
