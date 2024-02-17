@@ -4,16 +4,28 @@ const ApiResponse = require("../utils/ApiResponse");
 
 exports.create = async (req, res, next) => {
   try {
-    const { name, category, quantity } = req.body;
+    const { category, food_type, quantity } = req.body;
 
-    const response = await InventorySchema.findOne({ name: name });
+    const response = await InventorySchema.findOne({
+      category: category,
+      food_type: food_type,
+    });
     if (response) {
-      throw new ApiError("Item name already exists", 400, "ItemExists");
+      const newResponse = await InventorySchema.findByIdAndUpdate(
+        response._id,
+        {
+          quantity: parseInt(response.quantity) + parseInt(quantity),
+        },
+        { new: true }
+      );
+      return res
+        .status(200)
+        .json(new ApiResponse(newResponse, "Item updated", 200));
     }
 
     const inventory = await InventorySchema.create({
-      name: name,
       category: category,
+      food_type: food_type,
       quantity: quantity,
     });
 
@@ -70,6 +82,18 @@ exports.deleteOne = async (req, res, next) => {
     }
 
     return res.status(200).json(new ApiResponse(response, "Item deleted", 200));
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.findByCategoryAndType = async (req, res, next) => {
+  try {
+    const response = await InventorySchema.find().group({
+      _id: { category: "$category", food_type: "$food_type" },
+    });
+
+    return res.status(200).json(new ApiResponse(response, "Items found", 200));
   } catch (err) {
     next(err);
   }

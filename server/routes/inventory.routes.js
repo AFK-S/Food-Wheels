@@ -12,10 +12,7 @@ const router = express.Router();
 
 router.post(
   "/",
-  body("name, quantity")
-    .trim()
-    .notEmpty()
-    .withMessage("Inventory Name is required"),
+  body("food_type").trim().notEmpty().withMessage("Food Type is required"),
   body("category").trim().notEmpty().withMessage("Category is required"),
   body("quantity").trim().notEmpty().withMessage("Quantity is required"),
   fieldHandler,

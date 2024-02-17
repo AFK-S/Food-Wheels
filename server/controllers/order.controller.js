@@ -5,11 +5,12 @@ const mongoose = require("mongoose");
 
 exports.create = async (req, res, next) => {
   try {
-    const { customer_id, items, total } = req.body;
+    const { customer_id, items, note, total } = req.body;
 
     const order = await OrderSchema.create({
       customer_id: customer_id,
       items: items,
+      note: note,
       total: total,
     });
 
