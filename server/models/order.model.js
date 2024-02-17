@@ -19,10 +19,6 @@ const OrderSchema = new Schema(
           default: 1,
           required: [true, "Please add a quantity"],
         },
-        note: {
-          type: String,
-          default: "",
-        },
         billing_price: {
           type: Number,
           required: [true, "Please add the billing price"],
@@ -37,6 +33,10 @@ const OrderSchema = new Schema(
       type: String,
       enum: ["placed", "confirmed", "preparing", "delivered", "cancelled"],
       default: "placed",
+    },
+    note: {
+      type: String,
+      default: "",
     },
     feedback: {
       type: String,

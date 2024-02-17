@@ -2,17 +2,15 @@ const { Schema, connection } = require("mongoose");
 
 const inventorySchema = new Schema(
   {
-    name: {
-      type: String,
-      trim: true,
-      required: [true, "Item Name is required"],
-    },
     category: {
       type: String,
-      trim: true,
-      enum: ["veg", "meat", "other"],
-      required: [true, "Category is required"],
-      default: "other",
+      enum: ["burger", "pizza", "pasta", "fries", "ice-cream", "donut"],
+      required: [true, "Please add a category"],
+    },
+    food_type: {
+      type: String,
+      enum: ["veg", "non-veg", "jain"],
+      required: [true, "Please add a food type"],
     },
     quantity: {
       type: Number,

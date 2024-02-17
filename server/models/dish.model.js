@@ -12,7 +12,7 @@ const DishSchema = new Schema(
     },
     category: {
       type: String,
-      enum: ["starter", "main course", "dessert"],
+      enum: ["burger", "pizza", "pasta", "fries", "ice-cream", "donut"],
       required: [true, "Please add a category"],
     },
     image: {
