@@ -14,7 +14,7 @@ import NewDish from "./NewDish.js";
 import "./Pages.css";
 
 const MainLayout = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const ToggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
