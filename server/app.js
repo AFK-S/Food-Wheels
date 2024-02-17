@@ -4,9 +4,9 @@ const { CORS_ORIGIN } = require("./config");
 const cookieParser = require("cookie-parser");
 const errorHandler = require("./middlewares/errorHandler.middleware");
 const IndexRoute = require("./routes/index.routes");
-const CookieRouter = require("./routes/cookie.routes");
 const DishRouter = require("./routes/dish.routes");
 const OrderRouter = require("./routes/order.routes");
+const CustomerRouter = require("./routes/customer.routes");
 
 const app = express();
 
@@ -16,9 +16,9 @@ app.use(cors({ origin: CORS_ORIGIN, credentials: true }));
 app.use(cookieParser());
 
 app.use("/api/field", IndexRoute);
-app.use("/api/cookie", CookieRouter);
 app.use("/api/dish", DishRouter);
 app.use("/api/order", OrderRouter);
+app.use("/api/customer", CustomerRouter);
 
 app.use(errorHandler);
 
