@@ -1,8 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { logoutUser } from "../../slice/UserSlice.js";
 import { useCookies } from "react-cookie";
 import "./MobileNav.css";
 

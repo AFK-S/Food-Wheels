@@ -1,9 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import "./SideNavigation.css";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { logoutUser } from "../../slice/UserSlice.js";
 import { useCookies } from "react-cookie";
 
 const SideNavigation = () => {

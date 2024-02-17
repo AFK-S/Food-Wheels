@@ -1,10 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Routes, Route } from "react-router-dom";
 import SideNavigation from "../components/SideNavigation/SideNavigation.js";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { fetchUser, logoutUser } from "../slice/UserSlice";
-import { useCookies } from "react-cookie";
 import TopBar from "../components/TopBar/TopBar.js";
 import { useState } from "react";
 import MobileNav from "../components/MobileNav/MobileNav.js";
