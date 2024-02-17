@@ -1,0 +1,97 @@
+.grey-btn {
+  background-color: rgba(128, 128, 128, 0.15);
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  color: rgb(0, 0, 0);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.badge {
+  position: absolute;
+  top: -0.3rem;
+  right: -0.4rem;
+  background-color: red;
+  border-radius: 50%;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  aspect-ratio: 1;
+  display: block !important;
+  transform: scale(0.2);
+}
+
+.home .search-bar {
+  background-color: var(--light-gray);
+  border-radius: 30px;
+}
+.home .search-bar input {
+  background-color: transparent;
+  border: 0;
+  outline: none;
+}
+
+.filters {
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+.filter {
+  border: 1px solid #0000008f;
+  padding: 0.3rem 1rem;
+  border-radius: 90px;
+  margin-right: 0.5rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.filter.active {
+  background-color: #000;
+  color: #fff;
+}
+
+.menu-card {
+  padding: 0.6rem;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.menu-card img {
+  aspect-ratio: 3/2;
+  object-fit: contain;
+}
+
+.menu-card .add-to {
+  background-color: #ffffff;
+  padding: 0.5rem;
+  border-radius: 16px;
+  width: fit-content;
+  position: absolute;
+  bottom: -0.6rem;
+  right: -0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-card button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: #000;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  cursor: pointer;
+}

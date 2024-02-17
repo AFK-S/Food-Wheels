@@ -1,14 +1,26 @@
 .topbar {
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 13px;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  position: sticky;
+  top: 0rem;
+  transition: 0.5s ease;
+  border-radius: 0;
+  z-index: 100;
 }
 
-.topbar .avatar {
-    width: 35px;
-    height: 35px;
-    overflow: hidden;
-    border-radius: 50%;
+.topbar.active {
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 0.6rem !important;
+  top: 0.7rem;
+  width: 90%;
+  margin: 0 auto;
+  border-radius: 50px;
+  font-size: 1rem;
 }

@@ -6,7 +6,7 @@ const TopBar = ({ ToggleMenu }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 110) {
+      if (window.scrollY > 90) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);

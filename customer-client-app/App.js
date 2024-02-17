@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text, View, StatusBar } from "react-native";
 import { WebView } from "react-native-webview";
 
 Notifications.setNotificationHandler({
@@ -43,14 +43,17 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
-      <WebView
-        scalesPageToFit={false}
-        mixedContentMode="compatibility"
-        onMessage={onMessage}
-        source={{ uri: "http://10.120.116.167:3000" }}
-      />
-    </SafeAreaView>
+    <>
+      <StatusBar barStyle="dark-content" backgroundColor="black" />
+      <SafeAreaView style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
+        <WebView
+          scalesPageToFit={false}
+          mixedContentMode="compatibility"
+          onMessage={onMessage}
+          source={{ uri: "http://10.120.116.167:3000" }}
+        />
+      </SafeAreaView>
+    </>
   );
 }
 
