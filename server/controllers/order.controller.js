@@ -43,7 +43,7 @@ exports.findAllByStatus = async (req, res, next) => {
       {
         $match: {
           status: {
-            $ne: status,
+            $nin: [...status],
           },
         },
       },
@@ -296,6 +296,49 @@ exports.rating = async (req, res, next) => {
     }
 
     return res.status(200).json(new ApiResponse(null, "Rating added", 200));
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.todayOrders = async (req, res, next) => {
+  try {
+    const order_completed = await OrderSchema.find({
+      status: "completed",
+      createdAt: {
+        $gte: new Date(new Date().setHours(00, 00, 00)),
+        $lt: new Date(new Date().setHours(23, 59, 59)),
+      },
+    })
+      .sort({
+        createdAt: -1,
+      })
+      .lean();
+
+    const order_pending = await OrderSchema.find({
+      status: {
+        $nin: ["completed", "cancelled"],
+      },
+      createdAt: {
+        $gte: new Date(new Date().setHours(00, 00, 00)),
+        $lt: new Date(new Date().setHours(23, 59, 59)),
+      },
+    })
+      .sort({
+        createdAt: -1,
+      })
+      .lean();
+
+    return res.status(200).json(
+      new ApiResponse(
+        {
+          order_completed,
+          order_pending,
+        },
+        "Order found",
+        200
+      )
+    );
   } catch (err) {
     next(err);
   }

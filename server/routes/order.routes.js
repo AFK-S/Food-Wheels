@@ -9,6 +9,7 @@ const {
   findAllByItem,
   feedback,
   rating,
+  todayOrders,
 } = require("../controllers/order.controller");
 const fieldHandler = require("../middlewares/fieldHandler.middleware");
 
@@ -67,5 +68,7 @@ router.post(
   fieldHandler,
   rating
 );
+
+router.get("/today/orders", todayOrders);
 
 module.exports = router;

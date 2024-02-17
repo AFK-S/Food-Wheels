@@ -22,7 +22,7 @@ const socket = (io) => {
     socket.on("Get_My_Queue", async (order_id) => {
       const orders = await OrderSchema.find({
         status: {
-          $ne: ["completed", "cancelled"],
+          $nin: ["completed", "cancelled"],
         },
       })
         .sort({
@@ -31,8 +31,10 @@ const socket = (io) => {
         .lean();
 
       let count = 0;
+      let status;
       orders.forEach((order) => {
         if (order._id.toString() === order_id) {
+          status = order.status;
           return;
         }
         count++;
@@ -40,6 +42,7 @@ const socket = (io) => {
       return {
         queue: count,
         estimated_time: count * 10,
+        status,
       };
     });
 
