@@ -43,10 +43,6 @@ exports.findAll = async (req, res, next) => {
   try {
     const dishes = await DishSchema.find().sort({ createdAt: -1 }).lean();
 
-    if (!dishes) {
-      throw new ApiError("Dishes not found", 404, "DishesNotFound");
-    }
-
     return res.status(200).json(new ApiResponse(dishes, "Dishes found", 200));
   } catch (err) {
     next(err);
@@ -60,10 +56,6 @@ exports.findOne = async (req, res, next) => {
     const response = await DishSchema.findById(dish_id)
       .sort({ createdAt: -1 })
       .lean();
-
-    if (!response) {
-      throw new ApiError("DIsh Not FOund", 404, "DishNotFound");
-    }
 
     return res.status(200).json(new ApiResponse(response, "Dish found", 200));
   } catch (err) {
