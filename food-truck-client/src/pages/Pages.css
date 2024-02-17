@@ -1,0 +1,29 @@
+.order-view {
+  height: 87vh;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+input[type="color"],
+input[type="range"],
+input[type="checkbox"],
+textarea,
+select {
+  width: 100%;
+  height: 40px;
+  margin: 5px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px !important;
+  box-sizing: border-box;
+}

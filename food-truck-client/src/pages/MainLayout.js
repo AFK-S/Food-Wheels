@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-
 import SideNavigation from "../components/SideNavigation/SideNavigation.js";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -15,6 +14,8 @@ import Feedback from "./Feedback";
 import Inventory from "./Inventory.js";
 import TruckRoute from "./Route.js";
 import Statistic from "./Statistics.js";
+import NewDish from "./NewDish.js";
+import "./Pages.css";
 
 const MainLayout = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
@@ -60,6 +61,7 @@ const MainLayout = () => {
               <Route path="/inventory" element={<Inventory />} />
               <Route path="/route" element={<TruckRoute />} />
               <Route path="/statistics" element={<Statistic />} />
+              <Route path="/new-dish" element={<NewDish />} />
             </Routes>
           </div>
         </div>

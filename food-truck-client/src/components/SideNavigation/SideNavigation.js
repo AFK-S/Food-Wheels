@@ -59,10 +59,10 @@ const SideNavigation = () => {
 
       <div>
         <div className="divider my-3"></div>
-        {/* <NavLink to="/new-member" className="navlink my-2 rounded-s ">
-          <i className="fa-solid fa-user-plus me-2 ms-2"></i>
-          <p>New Member</p>
-        </NavLink> */}
+        <NavLink to="/new-dish" className="navlink my-2 rounded-s ">
+          <i className="fa-solid fa-burger me-2 ms-2"></i>
+          <p>Add New Dish</p>
+        </NavLink>
         <button
           className="logout-btn flexbox px-3 p-2 w-100 rounded-s"
           // onClick={handleLogout}

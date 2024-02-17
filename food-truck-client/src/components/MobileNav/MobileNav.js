@@ -92,14 +92,14 @@ const MobileNav = ({ isMenuOpen, ToggleMenu }) => {
 
         <div className="pb-4">
           <div className="divider my-3"></div>
-          {/* <NavLink
-            to="/new-member"
+          <NavLink
+            to="/new-dish"
             className="navlink my-2 rounded-s"
             onClick={ToggleMenu}
           >
-            <i className="fa-solid fa-user-plus me-2 ms-2"></i>
-            <p>New Member</p>
-          </NavLink> */}
+            <i className="fa-solid fa-burger me-2 ms-2"></i>
+            <p>Add New Dish</p>
+          </NavLink>
           <button
             className="logout-btn flexbox px-3 p-2 w-100 rounded-s"
             // onClick={handleLogout}
