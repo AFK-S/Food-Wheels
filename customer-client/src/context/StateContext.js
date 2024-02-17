@@ -78,12 +78,6 @@ const StateProvider = ({ children }) => {
     setLoading(state);
   };
 
-  useEffect(() => {
-    const controller = new AbortController();
-
-    return () => controller.abort();
-  }, [fetchFlag]);
-
   const refreshFlag = () => {
     setFetchFlag((prev) => !prev);
   };

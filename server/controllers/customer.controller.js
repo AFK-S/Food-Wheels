@@ -23,7 +23,7 @@ exports.register = async (req, res, next) => {
     return res
       .status(201)
       .cookie("customer_id", customer._id, {
-        maxAge: 1000 * 60 * 10, // 10 minute
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
       })
       .json(new ApiResponse(customer, "Customer register successfully", 201));
   } catch (err) {
@@ -47,7 +47,7 @@ exports.login = async (req, res, next) => {
     return res
       .status(200)
       .cookie("customer_id", customer._id, {
-        maxAge: 1000 * 60 * 10, // 10 minute
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
       })
       .json(new ApiResponse(customer, "Customer logged in", 200));
   } catch (err) {

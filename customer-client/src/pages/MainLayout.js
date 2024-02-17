@@ -1,12 +1,21 @@
-import React, { useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Home from "./Home.js";
 import Cart from "./Cart.js";
 import TopBar from "../components/TopBar/TopBar.js";
-import './Page.css'
+import "./Page.css";
+import { useStateContext } from "../context/StateContext.js";
 
 const MainLayout = () => {
+  const { isLogin } = useStateContext();
   const [cart, setCart] = useState([]);
+  const Navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLogin) {
+      Navigate("/login");
+    }
+  }, []);
 
   return (
     <>
@@ -14,8 +23,16 @@ const MainLayout = () => {
         <TopBar cart={cart} />
         <div className="app-body px-3">
           <Routes>
-            <Route path="/" index element={<Home cart={cart} setCart={setCart} />} />
-            <Route path="/cart" index element={<Cart cart={cart} setCart={setCart} />} />
+            <Route
+              path="/"
+              index
+              element={<Home cart={cart} setCart={setCart} />}
+            />
+            <Route
+              path="/cart"
+              index
+              element={<Cart cart={cart} setCart={setCart} />}
+            />
           </Routes>
         </div>
       </div>
