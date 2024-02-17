@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactApexChart from "react-apexcharts";
+import { Modal, Button } from '@mantine/core';
+import { TextInput, Checkbox, Group, Box, Select } from '@mantine/core';
+import { useForm } from '@mantine/form';
 
-const inventory = () => {
+const Inventory = () => {
+  const form = useForm({
+    initialValues: {
+      name: '',
+      category: '',
+      quantity: '',
+    },
+  });
+  const [inventoryModal, setInventoryModal] = useState(false)
+  const categories = ["veg", "non-veg", "other"]
 
   const data = {
     series: [20, 40],
@@ -69,6 +81,12 @@ const inventory = () => {
 
       </div>
       <div className="col-lg-4">
+        <button className="black-btn mb-3" onClick={() => {
+          setInventoryModal(true)
+        }}>
+          <i class="fas fa-plus"></i>
+          Add Item
+        </button>
         <div className="c-card" style={{
           overflow: "hidden"
         }}>
@@ -96,8 +114,35 @@ const inventory = () => {
         </div>
       </div>
     </div>
+    <Modal className="rounded" opened={inventoryModal} onClose={() => setInventoryModal(false)} title="Add Item">
+      <form onSubmit={form.onSubmit((values) => console.log(values))}>
+        <TextInput
+          withAsterisk
+          label="Item Name"
+          placeholder="Enter Item Name"
+          {...form.getInputProps('name')}
+        />
+        <TextInput
+          className="my-3"
+          type="number"
+          withAsterisk
+          label="Item Quantity"
+          placeholder="Enter Item Quantity"
+          {...form.getInputProps('quantity')}
+        />
+        <Select
+          className="my-3"
+          withAsterisk
+          label="Category"
+          placeholder="Select Category"
+          data={categories}
+          {...form.getInputProps('category')}
+        />
+        <button className="black-btn mt-3">Add</button>
+      </form>
+    </Modal>
 
   </div>;
 };
 
-export default inventory;
+export default Inventory;
