@@ -16,7 +16,6 @@ input[type="month"],
 input[type="week"],
 input[type="color"],
 input[type="range"],
-input[type="checkbox"],
 textarea,
 select {
   width: 100%;
