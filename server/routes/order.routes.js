@@ -7,6 +7,8 @@ const {
   findOne,
   deleteOne,
   findAllByItem,
+  feedback,
+  rating,
 } = require("../controllers/order.controller");
 const fieldHandler = require("../middlewares/fieldHandler.middleware");
 
@@ -48,6 +50,22 @@ router.delete(
   param("order_id").trim().notEmpty().withMessage("Order ID is required"),
   fieldHandler,
   deleteOne
+);
+
+router.post(
+  "/feedback",
+  param("order_id").trim().notEmpty().withMessage("Order ID is required"),
+  body("feedback").trim().notEmpty().withMessage("Feedback is required"),
+  fieldHandler,
+  feedback
+);
+
+router.post(
+  "/rating",
+  param("order_id").trim().notEmpty().withMessage("Order ID is required"),
+  body("rating").trim().notEmpty().withMessage("Rating is required"),
+  fieldHandler,
+  rating
 );
 
 module.exports = router;

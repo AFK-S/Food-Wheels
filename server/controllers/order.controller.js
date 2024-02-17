@@ -260,3 +260,41 @@ exports.findAllByItem = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.feedback = async (req, res, next) => {
+  try {
+    const { order_id } = req.params;
+    const { feedback } = req.body;
+
+    const response = await OrderSchema.findByIdAndUpdate(order_id, {
+      feedback: feedback,
+    });
+
+    if (!response) {
+      throw new ApiError("Order Not Found", 404, "OrderNotFound");
+    }
+
+    return res.status(200).json(new ApiResponse(null, "Feedback added", 200));
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.rating = async (req, res, next) => {
+  try {
+    const { order_id } = req.params;
+    const { rating } = req.body;
+
+    const response = await OrderSchema.findByIdAndUpdate(order_id, {
+      rating: rating,
+    });
+
+    if (!response) {
+      throw new ApiError("Order Not Found", 404, "OrderNotFound");
+    }
+
+    return res.status(200).json(new ApiResponse(null, "Rating added", 200));
+  } catch (err) {
+    next(err);
+  }
+};

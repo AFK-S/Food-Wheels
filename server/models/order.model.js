@@ -38,6 +38,14 @@ const OrderSchema = new Schema(
       enum: ["placed", "confirmed", "preparing", "delivered", "cancelled"],
       default: "placed",
     },
+    feedback: {
+      type: String,
+      default: "",
+    },
+    rating: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
