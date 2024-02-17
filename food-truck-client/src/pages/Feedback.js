@@ -56,6 +56,14 @@ const Feedback = () => {
         </div>;
       })}
     </div>
+    {/* <button onClick={() => {
+      if (window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage("HELLO")
+      } else {
+        new Notification("okok")
+
+      }
+    }}>okoko</button> */}
   </div>;
 };
 

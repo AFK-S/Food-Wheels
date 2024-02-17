@@ -13,7 +13,7 @@ const inventory = () => {
       colors: ["#000000", "#808080"],
       responsive: [
         {
-          breakpoint: 480,
+          breakpoint: 380,
           options: {
             chart: {
               width: 350,
@@ -25,7 +25,7 @@ const inventory = () => {
         },
       ],
       legend: {
-        position: "bottom", // Set the legend position to "bottom"
+        position: "bottom",
       },
     },
   };
@@ -69,7 +69,9 @@ const inventory = () => {
 
       </div>
       <div className="col-lg-4">
-        <div className="c-card">
+        <div className="c-card" style={{
+          overflow: "hidden"
+        }}>
           <div id="chart">
             <div className="ms-2 mb-4">
               <h5>Inventory Statistics</h5>
