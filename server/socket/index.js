@@ -1,9 +1,21 @@
 const OrderSchema = require("../models/order.model");
+const fs = require("fs");
 
 const socket = (io) => {
+  fs.watch("cache.json", async (eventType) => {
+    if (eventType === "change") {
+      const location = await JSON.parse(fs.readFileSync("./cache.json"));
+      io.emit("Display_Truck_Location", location);
+    }
+  });
   io.on("connection", (socket) => {
     socket.on("Set_Truck_Location", async (coordinates) => {
-      io.emit("Display_Truck_Location", coordinates);
+      fs.writeFileSync("./cache.json", JSON.stringify(coordinates));
+    });
+
+    socket.on("Get_Truck_Location", async () => {
+      const location = await JSON.parse(fs.readFileSync("./cache.json"));
+      io.emit("Display_Truck_Location", location);
     });
 
     socket.on("Push_Notification", async (details) => {
@@ -15,10 +27,9 @@ const socket = (io) => {
       });
     });
 
-    socket.on("Order_Placed", async () => {
-      console.log("Order placed");
-      io.emit("Fetch_Orders");
-    });
+    // socket.on("Order_Placed", async () => {
+    //   io.emit("Fetch_Orders");
+    // });
 
     socket.on("Get_My_Queue", async (order_id) => {
       const orders = await OrderSchema.find({

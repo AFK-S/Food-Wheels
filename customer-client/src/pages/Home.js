@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import ItemInfoCard from "../components/ItemInfoCard/ItemInfoCard";
 import axios from "axios";
+import { useStateContext } from "../context/StateContext";
 
 const Home = ({ cart, setCart }) => {
+  const { socket } = useStateContext();
+
   const [activeFilter, setActiveFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [currSelectedItem, setCurrSelectedItem] = useState(null);
@@ -35,6 +38,23 @@ const Home = ({ cart, setCart }) => {
   const filters = ["All", "Veg", "Non-Veg", "Jain"];
 
   const [dishes, setDishes] = useState([]);
+  const [truckLocation, setTruckLocation] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
+
+  useEffect(() => {
+    socket.on("Display_Truck_Location", (coordinates) => {
+      console.log("Truck Location: ", coordinates);
+      setTruckLocation(coordinates);
+    });
+
+    socket.emit("Get_Truck_Location");
+
+    return () => {
+      socket.off("Display_Truck_Location");
+    };
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -194,10 +214,14 @@ const Home = ({ cart, setCart }) => {
         </div>
         <div className="d-flex align-items-center justify-content-between">
           <p>Created At : 12:45PM</p>
-          <p style={{
-            color: "green",
-            fontWeight: 600
-          }}>In Process</p>
+          <p
+            style={{
+              color: "green",
+              fontWeight: 600,
+            }}
+          >
+            In Process
+          </p>
         </div>
         <button className="black-btn mt-3 w-100">View Truck Location</button>
       </div>
