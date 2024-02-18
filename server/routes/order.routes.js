@@ -7,9 +7,9 @@ const {
   findOne,
   deleteOne,
   findAllByItem,
-  feedback,
-  rating,
+  updateFeedbackAndRating,
   updateStatus,
+  findFeedbackAndRating,
 } = require("../controllers/order.controller");
 const { todayOrders } = require("../controllers/dashboard.controller");
 const fieldHandler = require("../middlewares/fieldHandler.middleware");
@@ -63,19 +63,12 @@ router.delete(
 );
 
 router.post(
-  "/feedback",
+  "/feedback-rating",
   param("order_id").trim().notEmpty().withMessage("Order ID is required"),
   body("feedback").trim().notEmpty().withMessage("Feedback is required"),
-  fieldHandler,
-  feedback
-);
-
-router.post(
-  "/rating",
-  param("order_id").trim().notEmpty().withMessage("Order ID is required"),
   body("rating").trim().notEmpty().withMessage("Rating is required"),
   fieldHandler,
-  rating
+  updateFeedbackAndRating
 );
 
 router.put(
@@ -87,5 +80,7 @@ router.put(
 );
 
 router.get("/today/orders", todayOrders);
+
+router.get("/feedback-rating", findFeedbackAndRating);
 
 module.exports = router;

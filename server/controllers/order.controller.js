@@ -265,31 +265,13 @@ exports.findAllByItem = async (req, res, next) => {
   }
 };
 
-exports.feedback = async (req, res, next) => {
+exports.updateFeedbackAndRating = async (req, res, next) => {
   try {
     const { order_id } = req.params;
-    const { feedback } = req.body;
+    const { feedback, rating } = req.body;
 
     const response = await OrderSchema.findByIdAndUpdate(order_id, {
       feedback: feedback,
-    });
-
-    if (!response) {
-      throw new ApiError("Order Not Found", 404, "OrderNotFound");
-    }
-
-    return res.status(200).json(new ApiResponse(null, "Feedback added", 200));
-  } catch (err) {
-    next(err);
-  }
-};
-
-exports.rating = async (req, res, next) => {
-  try {
-    const { order_id } = req.params;
-    const { rating } = req.body;
-
-    const response = await OrderSchema.findByIdAndUpdate(order_id, {
       rating: rating,
     });
 
@@ -297,7 +279,7 @@ exports.rating = async (req, res, next) => {
       throw new ApiError("Order Not Found", 404, "OrderNotFound");
     }
 
-    return res.status(200).json(new ApiResponse(null, "Rating added", 200));
+    return res.status(200).json(new ApiResponse(null, "Feedback added", 200));
   } catch (err) {
     next(err);
   }
@@ -317,6 +299,25 @@ exports.updateStatus = async (req, res, next) => {
     }
 
     return res.status(200).json(new ApiResponse(null, "Status updated", 200));
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.findFeedbackAndRating = async (req, res, next) => {
+  try {
+    const response = await OrderSchema.find()
+      .project({
+        items: 0,
+      })
+      .sort({
+        updatedAt: -1,
+      })
+      .lean();
+
+    return res
+      .status(200)
+      .json(new ApiResponse(response, "Feedback and rating found", 200));
   } catch (err) {
     next(err);
   }

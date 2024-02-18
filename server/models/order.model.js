@@ -47,6 +47,11 @@ const OrderSchema = new Schema(
       default: 0,
       max: 5,
     },
+    sector: {
+      type: String,
+      enum: ["hygiene", "taste", "experience", ""],
+      default: "",
+    },
     coordinates: {
       type: Object,
       default: {
