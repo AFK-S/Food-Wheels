@@ -11,7 +11,7 @@ import {
   LogBox,
 } from "react-native";
 import { WebView } from "react-native-webview";
-import * as Location from 'expo-location'; // Import Location module
+import * as Location from "expo-location"; // Import Location module
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -54,8 +54,8 @@ export default function App() {
 
   async function getLocationPermission() {
     const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      console.error('Location permission not granted');
+    if (status !== "granted") {
+      console.error("Location permission not granted");
       return;
     }
   }
@@ -82,10 +82,11 @@ export default function App() {
 }
 
 async function schedulePushNotification(details) {
+  const data = await JSON.parse(details);
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: "I am in danger",
-      body: `Sent by ${details}`,
+      title: data.title,
+      body: data.body,
       data: { data: details },
       sound: "default", // or specify a sound file
     },
