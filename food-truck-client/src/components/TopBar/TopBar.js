@@ -23,8 +23,9 @@ const TopBar = ({ ToggleMenu }) => {
   return (
     <>
       <div
-        className={`topbar container-fluid py-3  py-md-2 mb-3 p-2 px-md-3 ${isScrolled ? "active" : ""
-          }`}
+        className={`topbar container-fluid py-3  py-md-2 mb-3 p-2 px-md-3 ${
+          isScrolled ? "active" : ""
+        }`}
       >
         <div className="row w-100 flexbox">
           <div className="col-9 col-md-10 d-flex align-items-center ">
@@ -42,6 +43,7 @@ const TopBar = ({ ToggleMenu }) => {
             {/* <div className="avatar" style={{ border: "2px solid #000" }}>
               <img className="img-fluid" src={AFS} alt="user" />
             </div> */}
+            <div id="google_element"></div>
           </div>
         </div>
       </div>
