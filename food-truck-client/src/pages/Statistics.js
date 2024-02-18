@@ -5,7 +5,7 @@ const Statistics = () => {
   return <div>
     <div className="container-fluid">
       <div className="c-card">
-        <h3>Sales</h3>
+        <h3>Weekly Sales</h3>
         <SalesPerDayChart />
       </div>
     </div>
