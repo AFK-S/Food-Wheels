@@ -1,87 +1,149 @@
-import React, { useState } from 'react'
-import { Modal, Button } from '@mantine/core';
-import { TextInput, Checkbox, Group, Box, Textarea, Select } from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Modal, Button } from "@mantine/core";
+import {
+  TextInput,
+  Checkbox,
+  Group,
+  Box,
+  Textarea,
+  Select,
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import axios from "axios";
 
 const Orders = () => {
-    const form = useForm({
-        initialValues: {
-            feedback: "",
-            rate: 0,
-            sector: ""
-        },
+  const [cookies] = useCookies(["customer_id"]);
+  const form = useForm({
+    initialValues: {
+      feedback: "",
+      rate: 0,
+      sector: "",
+    },
+  });
+  const [rateModal, setRateModal] = useState(false);
+  const navigate = useNavigate();
 
-    });
-    const [rateModal, setRateModal] = useState(false)
-    const navigate = useNavigate();
-    return (
-        <div className='orders'>
-            <h4 className='my-3'>My Orders</h4>
-            <div className="order-cards p-3">
-                <div className="d-flex align-items-center justify-content-between">
-                    <p>Order ID : 90909</p>
-                    <p>17-02-2024</p>
-                </div>
-                <div className="list mt-3">
-                    <p>Burger (x1)</p>
-                    <p>Burger (x1)</p>
-                    <p>Burger (x1)</p>
-                </div>
-                <button className='black-btn mt-4 p-2' onClick={() => setRateModal(true)}>Give Feedback</button>
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    (async () => {
+      try {
+        const { data } = await axios.get(
+          `/api/order/customer/${cookies.customer_id}`,
+          {
+            signal,
+          }
+        );
+        setOrders(data.data);
+        console.log(data.data);
+      } catch (err) {
+        if (err.name === "CanceledError") return;
+        alert(err.response?.data?.message || err.message || err);
+      }
+    })();
+    return () => controller.abort();
+  }, []);
+
+  const handleFeedback = async (order_id) => {
+    setRateModal(true);
+    try {
+      await axios.post(`/api/order/feedback-rating/${order_id}`, {
+        feedback: form.values.feedback,
+        rating: form.values.rate,
+        sector: form.values.sector,
+      });
+      form.reset();
+    } catch (err) {
+      alert(err.response?.data?.message || err.message || err);
+    }
+    setRateModal(false);
+  };
+
+  return (
+    <div className="orders">
+      <h4 className="my-3">My Orders</h4>
+      {orders.map((order) => (
+        <div className="order-cards p-3" key={order._id}>
+          <div className="d-flex align-items-center justify-content-between">
+            <p>Order ID : {order._id}</p>
+            <p>{order.createdAt}</p>
+          </div>
+          {order.items.map((item) => (
+            <div className="list mt-3">
+              <p>
+                {item.dish_name} (x{item.quantity})
+              </p>
             </div>
-            <Modal opened={rateModal} onClose={() => setRateModal(false)} title="Give Feedback" centered >
-                <form onSubmit={form.onSubmit((values) => console.log(values))}>
-                    <Select
-                        style={{
-                            borderRadius: "20px"
-                        }}
-                        withAsterisk
-                        className='my-3'
-                        label="Sector"
-                        placeholder="Pick value"
-                        data={["hygiene", "taste", "experience"]}
-                        {...form.getInputProps('sector')}
-                    />
-                    <Select
-                        withAsterisk
-                        style={{
-                            borderRadius: "20px"
-                        }}
-                        className='my-3'
-                        label="Rate"
-                        placeholder="Pick value"
-                        data={['0', '1', '2', '3', '4', '5']}
-                        {...form.getInputProps('rate')}
-                    />
-                    <Textarea
-                        className='mt-4'
-                        withAsterisk
-                        label="Feedback"
-                        radius="md"
-                        autosize
-                        minRows={6}
-                        placeholder="your@email.com"
-                        {...form.getInputProps('feedback')}
-
-                    />
-                    <button className='black-btn mt-3'>Submit</button>
-                </form>
-            </Modal>
-            <button className='black-btn' onClick={() => {
-                navigate("/")
-            }} style={{
-                position: "fixed",
-                bottom: "1rem",
-                left: 0,
-                right: 0,
-                width: "90%",
-                margin: "0 auto"
-            }}>
-                Back to Home
-            </button>
+          ))}
+          <button className="black-btn mt-4 p-2" onClick={handleFeedback}>
+            Give Feedback
+          </button>
         </div>
-    )
-}
+      ))}
+      <Modal
+        opened={rateModal}
+        onClose={() => setRateModal(false)}
+        title="Give Feedback"
+        centered
+      >
+        <form onSubmit={form.onSubmit((values) => console.log(values))}>
+          <Select
+            style={{
+              borderRadius: "20px",
+            }}
+            withAsterisk
+            className="my-3"
+            label="Sector"
+            placeholder="Pick value"
+            data={["hygiene", "taste", "experience"]}
+            {...form.getInputProps("sector")}
+          />
+          <Select
+            withAsterisk
+            style={{
+              borderRadius: "20px",
+            }}
+            className="my-3"
+            label="Rate"
+            placeholder="Pick value"
+            data={["0", "1", "2", "3", "4", "5"]}
+            {...form.getInputProps("rate")}
+          />
+          <Textarea
+            className="mt-4"
+            withAsterisk
+            label="Feedback"
+            radius="md"
+            autosize
+            minRows={6}
+            placeholder="your@email.com"
+            {...form.getInputProps("feedback")}
+          />
+          <button className="black-btn mt-3">Submit</button>
+        </form>
+      </Modal>
+      <button
+        className="black-btn"
+        onClick={() => {
+          navigate("/");
+        }}
+        style={{
+          position: "fixed",
+          bottom: "1rem",
+          left: 0,
+          right: 0,
+          width: "90%",
+          margin: "0 auto",
+        }}
+      >
+        Back to Home
+      </button>
+    </div>
+  );
+};
 
-export default Orders
+export default Orders;
