@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import { useStateContext } from "../context/StateContext";
 
 const Cart = ({ cart, setCart, location }) => {
+  const { socket } = useStateContext();
+
   const [cookies] = useCookies(["customer_id"]);
   const [instructions, setInstructions] = useState("");
   const navigate = useNavigate();
@@ -17,12 +20,10 @@ const Cart = ({ cart, setCart, location }) => {
     return totalPrice;
   };
 
-
-
   const tempLocation = {
     latitude: 19.1071733,
-    longitude: 72.8373538
-  }
+    longitude: 72.8373538,
+  };
 
   const handleBookNow = async () => {
     try {
@@ -34,17 +35,18 @@ const Cart = ({ cart, setCart, location }) => {
           billing_price: item.price.discounted || item.price.original,
         })),
         total: calculateTotalPrice(),
-        coordinates: location.latitude && location.longitude ? location : tempLocation,
-        note: instructions
+        coordinates:
+          location.latitude && location.longitude ? location : tempLocation,
+        note: instructions,
       });
       console.log(data.data);
+      socket.emit("Order_Placed");
       setCart([]);
       navigate("/");
     } catch (err) {
       alert(err.response?.data?.message || err.message || err);
     }
   };
-
 
   if (cart.length === 0) {
     return (
@@ -121,7 +123,9 @@ const Cart = ({ cart, setCart, location }) => {
         })}
       </div>
       <div className="d-flex flex-column">
-        <label htmlFor="instructions" className="fw-semibold">Instructions</label>
+        <label htmlFor="instructions" className="fw-semibold">
+          Instructions
+        </label>
         <input
           type="text"
           name="instructions"

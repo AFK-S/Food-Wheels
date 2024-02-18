@@ -99,6 +99,7 @@ const StateProvider = ({ children }) => {
         toggleMobileNav,
         mobileNav,
         toggleLoading,
+        socket,
       }}
     >
       {children}
