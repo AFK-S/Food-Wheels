@@ -272,28 +272,36 @@ const Home = ({ cart, setCart }) => {
         </div>
       </div>
 
-      <div className="tracking-order">
-        {myQueue.length !== 0 && (
+      {myQueue?.length !== 0 && (
+        <div className="tracking-order">
           <div className="d-flex align-items-center justify-content-between">
-            <p>Order ID : {myQueue[0].order_id}</p>
-            <p>{myQueue[0].queue}th in Queue</p>
+            <p style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              width: "50vw"
+            }}>
+              Order ID : {myQueue[0]?.order_id}
+            </p>
+
+            <p>{myQueue[0]?.queue + 1} in Queue</p>
           </div>
-        )}
-        {myQueue.length !== 0 && (
           <div className="d-flex align-items-center justify-content-between">
-            <p>Created At : {myQueue[0].createdAt}</p>
+            <p>Created At : {myQueue[0]?.createdAt}</p>
             <p
               style={{
                 color: "green",
                 fontWeight: 600,
               }}
             >
-              {myQueue[0].status}
+              {myQueue[0]?.status}
             </p>
           </div>
-        )}
-        <button className="black-btn mt-3 w-100">View Truck Location</button>
-      </div>
+          <button className="black-btn mt-3 w-100">View Truck Location</button>
+        </div>
+      )
+      }
+
       <Modal
         opened={shareModal}
         onClose={() => {
@@ -313,7 +321,7 @@ const Home = ({ cart, setCart }) => {
           </button>
         </div>
       </Modal>
-    </div>
+    </div >
   );
 };
 
