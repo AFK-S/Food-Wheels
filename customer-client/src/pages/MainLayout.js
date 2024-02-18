@@ -11,10 +11,30 @@ const MainLayout = () => {
   const { isLogin } = useStateContext();
   const [cart, setCart] = useState([]);
   const Navigate = useNavigate();
+  const [location, setLocation] = useState({
+    latitude: null,
+    longitude: null
+  });
 
   useEffect(() => {
     if (!isLogin) {
       Navigate("/login");
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          });
+        },
+        (error) => {
+          console.error("Error getting user's location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
     }
   }, []);
 
@@ -32,7 +52,7 @@ const MainLayout = () => {
             <Route
               path="/cart"
               index
-              element={<Cart cart={cart} setCart={setCart} />}
+              element={<Cart cart={cart} setCart={setCart} location={location} />}
             />
             <Route
               path="/orders"

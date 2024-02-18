@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 
-const Cart = ({ cart, setCart }) => {
+const Cart = ({ cart, setCart, location }) => {
   const [cookies] = useCookies(["customer_id"]);
+  const [instructions, setInstructions] = useState("");
   const navigate = useNavigate();
+
   // Function to calculate the total price of items in the cart
   const calculateTotalPrice = () => {
     let totalPrice = 0;
@@ -27,6 +29,8 @@ const Cart = ({ cart, setCart }) => {
           };
         }),
         total: calculateTotalPrice(),
+        coordinates: location,
+        note: instructions
       });
       console.log(data.data);
       setCart([]);
@@ -89,10 +93,17 @@ const Cart = ({ cart, setCart }) => {
       </div>
       <div className="d-flex flex-column">
         <label htmlFor="instructions" className="fw-semibold">Instructions</label>
-        <input type="text" name="instructions" placeholder="add instructions (if any)" style={{
-          padding: "0.5rem",
-          borderRadius: "14px",
-        }} />
+        <input
+          type="text"
+          name="instructions"
+          placeholder="Add instructions (if any)"
+          style={{
+            padding: "0.5rem",
+            borderRadius: "14px",
+          }}
+          value={instructions}
+          onChange={(e) => setInstructions(e.target.value)}
+        />
       </div>
 
       <div
