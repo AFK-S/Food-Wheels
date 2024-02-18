@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import ItemInfoCard from "../components/ItemInfoCard/ItemInfoCard";
 import axios from "axios";
+import { Modal, Button } from '@mantine/core';
+
 import { useStateContext } from "../context/StateContext";
 
 const Home = ({ cart, setCart }) => {
@@ -10,6 +12,7 @@ const Home = ({ cart, setCart }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currSelectedItem, setCurrSelectedItem] = useState(null);
   const [infoMenu, setInfoMenu] = useState();
+  const [shareModal, setShareModal] = useState(false)
   const colors = [
     "#C6E6B3", // Light green
     "#B4E5E7", // Light blue
@@ -72,6 +75,21 @@ const Home = ({ cart, setCart }) => {
     })();
     return () => controller.abort();
   }, []);
+
+  const handleFacebookShare = () => {
+    const shareUrl = "http://localhost:3000/"; // Replace with your website URL
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, "_blank");
+  };
+
+  const handleTwitterShare = () => {
+    const shareUrl = "http://localhost:3000/"; // Replace with your website URL
+    window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`, "_blank");
+  };
+
+  const handleWhatsAppShare = () => {
+    const shareText = "Check out this awesome website: http://localhost:3000/"; // Replace with your text and website URL
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, "_blank");
+  };
 
   return (
     <div className="home py-2">
@@ -173,6 +191,23 @@ const Home = ({ cart, setCart }) => {
                       colors[Math.floor(Math.random() * colors.length)],
                   }}
                 >
+                  <button className="black-btn" style={{
+                    position: "absolute",
+                    right: "10px",
+                    fontSize: "10px",
+                    width: "30px",
+                    height: "30px",
+                    padding: 0,
+                    borderRadius: "10px",
+                    background: "white",
+                    color: "#000"
+                  }} onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setShareModal(true);
+                  }} >
+                    <i class="fa-solid fa-share-from-square"></i>
+                  </button>
                   <img src={item.image.url} alt="" className="img-fluid mt-2" />
                   <p className="mt-4 mb-2 px-1">{item.name}</p>
                   <div className="details  d-flex align-items-center px-1">
@@ -195,6 +230,7 @@ const Home = ({ cart, setCart }) => {
                     </button>
                   </div>
                 </div>
+
               </div>
             ))}
           <ItemInfoCard
@@ -225,6 +261,15 @@ const Home = ({ cart, setCart }) => {
         </div>
         <button className="black-btn mt-3 w-100">View Truck Location</button>
       </div>
+      <Modal opened={shareModal} onClose={() => {
+        setShareModal(false);
+      }} title="Share">
+        <div className="share-mod d-flex align-items-center justify-content-between">
+          <button onClick={handleFacebookShare}><i class="fa-brands fa-facebook"></i></button>
+          <button onClick={handleTwitterShare}><i class="fa-brands fa-x-twitter"></i></button>
+          <button onClick={handleWhatsAppShare}><i class="fa-brands fa-whatsapp"></i></button>
+        </div>
+      </Modal>
     </div>
   );
 };
