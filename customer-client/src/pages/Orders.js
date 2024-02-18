@@ -9,6 +9,7 @@ const Orders = () => {
         initialValues: {
             feedback: "",
             rate: 0,
+            sector: ""
         },
 
     });
@@ -31,6 +32,28 @@ const Orders = () => {
             </div>
             <Modal opened={rateModal} onClose={() => setRateModal(false)} title="Give Feedback" className='rounded' centered>
                 <form onSubmit={form.onSubmit((values) => console.log(values))}>
+                    <Select
+                        style={{
+                            borderRadius: "20px"
+                        }}
+                        withAsterisk
+                        className='my-3'
+                        label="Sector"
+                        placeholder="Pick value"
+                        data={["hygiene", "taste", "experience"]}
+                        {...form.getInputProps('sector')}
+                    />
+                    <Select
+                        withAsterisk
+                        style={{
+                            borderRadius: "20px"
+                        }}
+                        className='my-3'
+                        label="Rate"
+                        placeholder="Pick value"
+                        data={['0', '1', '2', '3', '4', '5']}
+                        {...form.getInputProps('rate')}
+                    />
                     <Textarea
                         className='mt-4'
                         withAsterisk
@@ -41,16 +64,6 @@ const Orders = () => {
                         placeholder="your@email.com"
                         {...form.getInputProps('feedback')}
 
-                    />
-                    <Select
-                        style={{
-                            borderRadius: "20px"
-                        }}
-                        className='my-3'
-                        label="Rate"
-                        placeholder="Pick value"
-                        data={['0', '1', '2', '3', '4', '5']}
-                        {...form.getInputProps('rate')}
                     />
                     <button className='black-btn mt-3'>Submit</button>
                 </form>
