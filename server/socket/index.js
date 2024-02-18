@@ -45,22 +45,25 @@ const socket = (io) => {
         status: {
           $nin: ["delivered", "cancelled"],
         },
-        customer_id,
       })
         .sort({
           createdAt: -1,
         })
         .lean();
 
-      const queue = orders.map((order) => {
-        return {
-          queue: orders.indexOf(order),
-          estimated_time: orders.indexOf(order) * 10,
-          status: order.status,
-          order_id: order._id,
-          createdAt: order.createdAt,
-        };
-      });
+      const queue = orders
+        .map((order) => {
+          if (order.customer_id.toString() === customer_id) {
+            return {
+              queue: orders.indexOf(order),
+              estimated_time: orders.indexOf(order) * 10,
+              status: order.status,
+              order_id: order._id,
+              createdAt: order.createdAt,
+            };
+          }
+        })
+        .filter((order) => order);
 
       socket.emit("Display_My_Queue", queue);
     });
