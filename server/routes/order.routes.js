@@ -9,7 +9,7 @@ const {
   findAllByItem,
   updateFeedbackAndRating,
   updateStatus,
-  findFeedbackAndRating,
+  findFeedbacks,
 } = require("../controllers/order.controller");
 const { todayOrders } = require("../controllers/dashboard.controller");
 const fieldHandler = require("../middlewares/fieldHandler.middleware");
@@ -81,6 +81,6 @@ router.put(
 
 router.get("/today/orders", todayOrders);
 
-router.get("/feedback-rating", findFeedbackAndRating);
+router.get("/all/feedback", findFeedbacks);
 
 module.exports = router;

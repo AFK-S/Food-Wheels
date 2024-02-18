@@ -304,20 +304,48 @@ exports.updateStatus = async (req, res, next) => {
   }
 };
 
-exports.findFeedbackAndRating = async (req, res, next) => {
+exports.findFeedbacks = async (req, res, next) => {
   try {
-    const response = await OrderSchema.find()
-      .project({
-        items: 0,
-      })
-      .sort({
-        updatedAt: -1,
-      })
-      .lean();
+    const response = await OrderSchema.aggregate([
+      {
+        $match: {
+          feedback: {
+            $ne: null,
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "customers",
+          localField: "customer_id",
+          foreignField: "_id",
+          as: "customer",
+        },
+      },
+      {
+        $unwind: "$customer",
+      },
+      {
+        $addFields: {
+          customer_name: "$customer.name",
+        },
+      },
+      {
+        $project: {
+          customer: 0,
+          items: 0,
+        },
+      },
+      {
+        $sort: {
+          updatedAt: -1,
+        },
+      },
+    ]);
 
     return res
       .status(200)
-      .json(new ApiResponse(response, "Feedback and rating found", 200));
+      .json(new ApiResponse(response, "Feedbacks found", 200));
   } catch (err) {
     next(err);
   }

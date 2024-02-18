@@ -36,11 +36,11 @@ const OrderSchema = new Schema(
     },
     note: {
       type: String,
-      default: "",
+      default: null,
     },
     feedback: {
       type: String,
-      default: "",
+      default: null,
     },
     rating: {
       type: Number,
@@ -49,8 +49,8 @@ const OrderSchema = new Schema(
     },
     sector: {
       type: String,
-      enum: ["hygiene", "taste", "experience", ""],
-      default: "",
+      enum: ["hygiene", "taste", "experience", null],
+      default: null,
     },
     coordinates: {
       type: Object,
