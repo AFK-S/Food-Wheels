@@ -179,28 +179,28 @@ const Dashboard = () => {
                         </div>
                         <div className="timeline d-flex align-items-center justify-content-between mt-3">
                           <div
-                            className={`dot ${
-                              order.status === "placed" ? "active" : ""
-                            }`}
+                            className={`dot ${order.status === "placed" ? "active" : ""
+                              }`}
                           >
                             <i className="fa-solid fa-hourglass-start"></i>
                           </div>
                           <div className="line"></div>
                           <div
-                            className={`dot ${
-                              order.status === "preparing" ? "active" : ""
-                            }`}
+                            className={`dot ${order.status === "preparing" ? "active" : ""
+                              }`}
                           >
                             <i className="fa-solid fa-box"></i>
                           </div>
                           <div className="line"></div>
                           <div
-                            className={`dot ${
-                              order.status === "delivered" ? "active" : ""
-                            }`}
+                            className={`dot ${order.status === "delivered" ? "active" : ""
+                              }`}
                           >
                             <i className="fa-solid fa-check"></i>
                           </div>
+                        </div>
+                        <div className="my-2 mt-3">
+                          <p>Ordered By : {order.customer_name}</p>
                         </div>
                         {order.status !== "delivered" && (
                           <button

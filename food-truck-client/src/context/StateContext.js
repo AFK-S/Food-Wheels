@@ -4,7 +4,7 @@ import io from "socket.io-client";
 
 const StateContext = createContext();
 
-const SERVER_URL = "http://localhost:8000";
+const SERVER_URL = "hhttp://10.120.116.113:8000/";
 
 const StateProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
