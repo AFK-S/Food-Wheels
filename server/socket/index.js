@@ -5,7 +5,13 @@ const socket = (io) => {
   fs.watch("cache.json", async (eventType) => {
     if (eventType === "change") {
       const location = await JSON.parse(fs.readFileSync("./cache.json"));
-      io.emit("Display_Truck_Location", location);
+      io.emit(
+        "Display_Truck_Location",
+        location || {
+          latitude: 0,
+          longitude: 0,
+        }
+      );
     }
   });
   io.on("connection", (socket) => {
@@ -15,7 +21,10 @@ const socket = (io) => {
 
     socket.on("Get_Truck_Location", async () => {
       const location = await JSON.parse(fs.readFileSync("./cache.json"));
-      io.emit("Display_Truck_Location", location);
+      io.emit(
+        "Display_Truck_Location",
+        location || { latitude: 0, longitude: 0 }
+      );
     });
 
     socket.on("Push_Notification", async (details) => {
