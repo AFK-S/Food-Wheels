@@ -2,11 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-import { useStateContext } from "../context/StateContext";
 
 const Cart = ({ cart, setCart, location }) => {
-  const { socket } = useStateContext();
-
   const [cookies] = useCookies(["customer_id"]);
   const [instructions, setInstructions] = useState("");
   const navigate = useNavigate();
@@ -40,7 +37,6 @@ const Cart = ({ cart, setCart, location }) => {
         note: instructions,
       });
       console.log(data.data);
-      socket.emit("Order_Placed");
       setCart([]);
       navigate("/");
     } catch (err) {

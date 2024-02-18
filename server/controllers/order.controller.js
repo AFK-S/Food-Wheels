@@ -15,6 +15,8 @@ exports.create = async (req, res, next) => {
       coordinates: coordinates,
     });
 
+    req.io.emit("Fetch_Orders");
+
     return res
       .status(201)
       .json(new ApiResponse(order, "Order created successfully", 201));
