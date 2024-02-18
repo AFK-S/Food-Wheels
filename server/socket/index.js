@@ -40,31 +40,29 @@ const socket = (io) => {
     //   io.emit("Fetch_Orders");
     // });
 
-    socket.on("Get_My_Queue", async (order_id) => {
+    socket.on("Get_My_Queue", async (customer_id) => {
       const orders = await OrderSchema.find({
         status: {
-          $nin: ["completed", "cancelled"],
+          $nin: ["delivered", "cancelled"],
         },
+        customer_id,
       })
         .sort({
           createdAt: -1,
         })
         .lean();
 
-      let count = 0;
-      let status;
-      orders.forEach((order) => {
-        if (order._id.toString() === order_id) {
-          status = order.status;
-          return;
-        }
-        count++;
+      const queue = orders.map((order) => {
+        return {
+          queue: orders.indexOf(order),
+          estimated_time: orders.indexOf(order) * 10,
+          status: order.status,
+          order_id: order._id,
+          createdAt: order.createdAt,
+        };
       });
-      return {
-        queue: count,
-        estimated_time: count * 10,
-        status,
-      };
+
+      io.emit("Display_My_Queue", queue);
     });
 
     socket.on("disconnect", async () => {
