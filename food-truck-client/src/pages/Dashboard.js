@@ -38,6 +38,32 @@ const Dashboard = () => {
     return () => controller.abort();
   }, [refresh]);
 
+  useEffect(() => {
+    const timers = pendingOrders.map((order) => {
+      return {
+        orderId: order._id,
+        startTime: new Date(),
+      };
+    });
+
+    const interval = setInterval(() => {
+      setPendingOrders((prevOrders) => {
+        return prevOrders.map((order) => {
+          const timer = timers.find((t) => t.orderId === order._id);
+          if (timer) {
+            const elapsedTime = Math.floor(
+              (new Date() - timer.startTime) / 1000
+            );
+            return { ...order, elapsedTime };
+          }
+          return order;
+        });
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [pendingOrders]);
+
   const handleStatus = async (order_id, status) => {
     try {
       const { data } = await axios.put(`/api/order/status/${order_id}`, {
@@ -71,17 +97,21 @@ const Dashboard = () => {
                 </h1>
               </div>
               <div className="col-md-8 p-0">
-                <div className="c-card ms-lg-3">
+                <div className="c-card ms-lg-3 h-100">
                   <h5>Scheduled Order</h5>
                   <div className="divider my-2"></div>
                   <div
-                    className="d-flex align-items-center justify-content-start"
+                    className="d-flex align-items-center justify-content-start h-100"
                     style={{
                       width: "100%",
                       overflowX: "auto",
                     }}
                   >
-                    {completedOrders.map((order) => {
+                    <p className="text-centre text-muted fw-semi-bold" style={{
+                      marginTop: "-2rem"
+                    }}>No Scheduled Order</p>
+
+                    {/* {completedOrders.map((order) => {
                       return (
                         <div
                           key={order._id}
@@ -104,7 +134,7 @@ const Dashboard = () => {
                           </div>
                         </div>
                       );
-                    })}
+                    })} */}
                   </div>
                 </div>
               </div>
