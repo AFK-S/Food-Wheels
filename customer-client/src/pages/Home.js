@@ -186,6 +186,21 @@ const Home = ({ cart, setCart }) => {
           />
         </div>
       </div>
+
+      <div className="tracking-order">
+        <div className="d-flex align-items-center justify-content-between">
+          <p>Order ID : #1233</p>
+          <p>5th in Queue</p>
+        </div>
+        <div className="d-flex align-items-center justify-content-between">
+          <p>Created At : 12:45PM</p>
+          <p style={{
+            color: "green",
+            fontWeight: 600
+          }}>In Process</p>
+        </div>
+        <button className="black-btn mt-3 w-100">View Truck Location</button>
+      </div>
     </div>
   );
 };
