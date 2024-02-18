@@ -1,3 +1,4 @@
+// MapComponent.js
 import React, { useEffect, useState } from "react";
 import "ol/ol.css";
 import Map from "ol/Map";
@@ -6,216 +7,218 @@ import TileLayer from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
 import Feature from "ol/Feature";
 import Point from "ol/geom/Point";
+import LineString from "ol/geom/LineString";
 import { fromLonLat } from "ol/proj";
 import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
-import { Style, Icon, Circle, Fill, Stroke } from "ol/style";
-import axios from "axios";
-import { Select } from "@mantine/core";
-import pin from "../../pin.png";
-import "./Map.css";
+import { Style, Stroke, Circle, Fill } from "ol/style";
 
 const MapComponent = () => {
-    const [map, setMap] = useState(null);
-    const [hospitalVectorLayer, setHospitalVectorLayer] = useState(null);
-    const [diseaseVectorLayer, setDiseaseVectorLayer] = useState(null);
-    const [hospitals, setHospitals] = useState([]);
-    const [disease, setDisease] = useState("");
-    const [diseaseHotspots, setDiseaseHotspots] = useState([]);
+  const location = {
+    latitude: 19.1157331,
+    longitude: 72.8397201,
+  };
+  const hospitalLocation = {
+    latitude: 19.1000733,
+    longitude: 72.8303538,
+  };
+  console.log("Passed location:", location);
+  console.log("Passed hospital location:", hospitalLocation);
+  const [startLatitude, setStartLatitude] = useState(location?.latitude);
+  const [startLongitude, setStartLongitude] = useState(location?.longitude);
+  const [endLatitude, setEndLatitude] = useState(hospitalLocation?.latitude);
+  const [endLongitude, setEndLongitude] = useState(hospitalLocation?.longitude);
+  const [distance, setDistance] = useState(null);
+  const [duration, setDuration] = useState(null);
+  const [map, setMap] = useState(null);
+  const [hospitals] = useState({
+    latitude: hospitalLocation?.latitude,
+    longitude: hospitalLocation?.longitude,
+  });
 
-    const DEFAULT_COORDINATES = [72.8373538, 19.1071733];
+  const calculateRoute = async (startCoords, endCoords) => {
+    try {
+      const apiKey = "5b3ce3597851110001cf62487657974046f7450b924af3f87910c744"; // Replace with your actual OpenRouteService API key
+      const routeUrl = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${startCoords}&end=${endCoords}&options={"radiuses":[1000,1000]}`;
 
-    const createHospitalHotspot = (coordinates) => {
-        const center = fromLonLat(coordinates);
+      console.log("API Request URL:", routeUrl);
+
+      const response = await fetch(routeUrl);
+      const data = await response.json();
+
+      if (response.ok && data.features && data.features.length > 0) {
+        const routeCoordinates = data.features[0].geometry.coordinates;
+        const distanceInKm =
+          data.features[0].properties.segments[0].distance / 1000;
+        const durationInSeconds =
+          data.features[0].properties.segments[0].duration;
+
+        return {
+          coordinates: routeCoordinates,
+          distance: distanceInKm.toFixed(2),
+          duration: Math.round(durationInSeconds / 60),
+        };
+      } else {
+        console.error("Error in API response:", data);
+        throw new Error("No features found in the API response.");
+      }
+    } catch (error) {
+      console.error("Error fetching route:", error.message);
+      throw new Error(`Error fetching route: ${error.message}`);
+    }
+  };
+
+  const handleCalculateRoute = async () => {
+    const startCoordinates = `${startLongitude},${startLatitude}`;
+    const endCoordinates = `${endLongitude},${endLatitude}`;
+    try {
+      const routeDetails = await calculateRoute(
+        startCoordinates,
+        endCoordinates
+      );
+      console.log("Route details:", routeDetails);
+
+      const newMap = new Map({
+        target: "map",
+        layers: [
+          new TileLayer({
+            source: new OSM(),
+          }),
+        ],
+        view: new View({
+          center: fromLonLat(routeDetails.coordinates[0]),
+          zoom: 12,
+        }),
+      });
+
+      const startPoint = new Feature(
+        new Point(fromLonLat(routeDetails.coordinates[0]))
+      );
+      const endPoint = new Feature(
+        new Point(
+          fromLonLat(
+            routeDetails.coordinates[routeDetails.coordinates.length - 1]
+          )
+        )
+      );
+
+      const vectorLayer = new VectorLayer({
+        source: new VectorSource({
+          features: [startPoint, endPoint],
+        }),
+      });
+
+      newMap.addLayer(vectorLayer);
+
+      const route = new Feature(
+        new LineString(routeDetails.coordinates).transform(
+          "EPSG:4326",
+          "EPSG:3857"
+        )
+      );
+
+      const routeLayer = new VectorLayer({
+        source: new VectorSource({
+          features: [route],
+        }),
+        style: new Style({
+          stroke: new Stroke({
+            color: "blue",
+            width: 5,
+          }),
+        }),
+      });
+
+      newMap.addLayer(routeLayer);
+
+      setDistance(routeDetails.distance);
+      setDuration(routeDetails.duration);
+
+      setMap(newMap);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (map && hospitals.length > 0) {
+      const hospitalFeatures = hospitals.map((hospital) => {
+        const coords = fromLonLat([hospital.longitude, hospital.latitude]);
+        console.log("Coordinates:", coords);
         return new Feature({
-            geometry: new Point(center),
+          geometry: new Point(coords),
+          name: hospital.name,
         });
+      });
+      console.log("Hospital features:", hospitalFeatures);
+
+      const hospitalVectorLayer = new VectorLayer({
+        source: new VectorSource({
+          features: hospitalFeatures,
+        }),
+        style: new Style({
+          image: new Circle({
+            radius: 6,
+            fill: new Fill({ color: "red" }),
+            stroke: new Stroke({ color: "white", width: 2 }),
+          }),
+        }),
+      });
+
+      console.log("Hospital vector layer:", hospitalVectorLayer);
+      map.addLayer(hospitalVectorLayer);
+    }
+  }, [map, hospitals]);
+
+  useEffect(() => {
+    return () => {
+      if (map) {
+        map.getLayers().clear();
+        map.setTarget(null);
+      }
     };
+  }, [map]);
 
-    const createDiseaseHotspot = (coordinates) => {
-        const center = fromLonLat(coordinates);
-        return new Feature({
-            geometry: new Point(center),
-        });
-    };
+  useEffect(() => {
+    if (
+      startLatitude !== undefined &&
+      startLongitude !== undefined &&
+      endLatitude !== undefined &&
+      endLongitude !== undefined
+    ) {
+      handleCalculateRoute();
+    }
+  }, [startLatitude, startLongitude, endLatitude, endLongitude]);
 
-    const setMapView = (coordinates, zoom = 15) => {
-        if (map) {
-            map.getView().setCenter(fromLonLat(coordinates));
-            map.getView().setZoom(zoom);
-        }
-    };
+  useEffect(() => {
+    setStartLatitude(location?.latitude);
+    setStartLongitude(location?.longitude);
+  }, [location]);
 
-    useEffect(() => {
-        if (!map) {
-            const newMap = new Map({
-                target: "map",
-                layers: [
-                    new TileLayer({
-                        source: new OSM(),
-                    }),
-                ],
-                view: new View({
-                    center: fromLonLat(DEFAULT_COORDINATES),
-                    zoom: 12,
-                }),
-            });
-            setMap(newMap);
+  useEffect(() => {
+    setEndLatitude(hospitalLocation?.latitude);
+    setEndLongitude(hospitalLocation?.longitude);
+  }, [hospitalLocation]);
 
-            const hospitalVectorLayer = new VectorLayer({
-                source: new VectorSource(),
-                style: new Style({
-                    image: new Icon({
-                        anchor: [0.5, 1],
-                        src: pin,
-                        scale: 0.1,
-                    }),
-                }),
-            });
-
-            // Create a feature with a point geometry at the default coordinates
-            const defaultLocationFeature = new Feature({
-                geometry: new Point(fromLonLat(DEFAULT_COORDINATES)),
-            });
-
-            // Add the default location feature to the hospital vector layer
-            hospitalVectorLayer.getSource().addFeature(defaultLocationFeature);
-
-            const diseaseVectorLayer = new VectorLayer({
-                source: new VectorSource(),
-                style: new Style({
-                    image: new Circle({
-                        radius: 30,
-                        fill: new Fill({ color: "rgba(255, 0, 0, 0.1)" }),
-                    }),
-                }),
-            });
-
-            newMap.addLayer(hospitalVectorLayer);
-            newMap.addLayer(diseaseVectorLayer);
-
-            setHospitalVectorLayer(hospitalVectorLayer);
-            setDiseaseVectorLayer(diseaseVectorLayer);
-
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const { latitude, longitude } = position.coords;
-                    setMapView([longitude, latitude]);
-                },
-                (error) => {
-                    console.error("Error getting current location:", error);
-                }
-            );
-        }
-    }, [map, setMapView]);
-
-
-    useEffect(() => {
-        if (hospitalVectorLayer) {
-            hospitalVectorLayer.getSource().clear();
-
-            if (hospitals.length > 0) {
-                const hospitalHotspotFeatures = hospitals.map((hospital) => {
-                    const coords = [hospital.longitude, hospital.latitude];
-                    return createHospitalHotspot(coords);
-                });
-
-                hospitalVectorLayer.getSource().addFeatures(hospitalHotspotFeatures);
-
-                setMapView(DEFAULT_COORDINATES);
-            }
-        }
-    }, [hospitals, hospitalVectorLayer, map]);
-
-    useEffect(() => {
-        if (diseaseVectorLayer) {
-            diseaseVectorLayer.getSource().clear();
-
-            if (diseaseHotspots.length > 0) {
-                const diseaseHotspotFeatures = diseaseHotspots.map((diseaseSpot) => {
-                    const coords = [diseaseSpot.longitude, diseaseSpot.latitude];
-                    return createDiseaseHotspot(coords);
-                });
-
-                diseaseVectorLayer.getSource().addFeatures(diseaseHotspotFeatures);
-            }
-        }
-    }, [diseaseHotspots, diseaseVectorLayer]);
-
-    const handleDiseaseCoordinates = async (selectedDisease) => {
-        try {
-            const { data } = await axios.get(
-                `/api/appointment/disease/${selectedDisease}`
-            );
-
-            // Filter out entries with null coordinates
-            const validData = data.filter(
-                (diseaseSpot) =>
-                    diseaseSpot.coordinates &&
-                    diseaseSpot.coordinates.latitude !== null &&
-                    diseaseSpot.coordinates.longitude !== null
-            );
-
-            const diseaseHotspots = validData.map((diseaseSpot) => ({
-                latitude: diseaseSpot.coordinates.latitude,
-                longitude: diseaseSpot.coordinates.longitude,
-            }));
-
-            setDiseaseHotspots(diseaseHotspots);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const getHospitals = async () => {
-        try {
-            const { data } = await axios.get("/api/hospitals");
-            const hospitalCoords = data.map((hospital) => ({
-                latitude: hospital.coordinates.latitude,
-                longitude: hospital.coordinates.longitude,
-            }));
-            setHospitals(hospitalCoords);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    useEffect(() => {
-        getHospitals();
-    }, []);
-
-    return (
-        <>
-            <Select
-                my="lg"
-                label="Select Dish"
-                placeholder="Select Dish"
-                data={[
-                    { label: "Burger", value: "burger" },
-                    { label: "Pizza", value: "pizza" },
-                    { label: "Pasta", value: "pasta" },
-                    { label: "Fries", value: "fries" },
-                    { label: "Ice Cream", value: "ice-cream" },
-                    { label: "Donut", value: "donut" },
-                ]}
-                value={disease}
-                onChange={(value) => {
-                    setDisease(value);
-                    handleDiseaseCoordinates(value);
-                }}
-            />
-            <div
-                className="map-container"
-                style={{ width: "100%", height: "600px" }}
-            >
-                <div
-                    id="map"
-                    className="map"
-                    style={{ width: "100%", height: "100%" }}
-                ></div>
-            </div>
-        </>
-    );
+  return (
+    <div>
+      {distance !== null && duration !== null && (
+        <div className="route-details">
+          <p>Distance: {distance} km</p>
+          <p>Estimated Travel Time: {duration} minutes</p>
+        </div>
+      )}
+      <div
+        id="map"
+        style={{
+          width: "100%",
+          height: "600px",
+          border: "1px solid #ccc",
+          marginBottom: "10px",
+        }}
+      ></div>
+    </div>
+  );
 };
 
 export default MapComponent;
