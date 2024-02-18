@@ -68,7 +68,7 @@ const Home = ({ cart, setCart }) => {
       if (window.ReactNativeWebView) {
         window.ReactNativeWebView.postMessage(JSON.stringify(details));
       } else {
-        alert(`${details.title}: ${details.body}`);
+        // alert(`${details.title}: ${details.body}`);
       }
     });
 
@@ -102,11 +102,11 @@ const Home = ({ cart, setCart }) => {
 
   function formatDate(dateString) {
     const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // January is 0!
     const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
     return `${day}-${month}-${year}`;
   }
 
@@ -314,7 +314,7 @@ const Home = ({ cart, setCart }) => {
               style={{
                 color: "green",
                 fontWeight: 600,
-                textTransform: "capitalize"
+                textTransform: "capitalize",
               }}
             >
               {myQueue[0]?.status}
@@ -327,13 +327,16 @@ const Home = ({ cart, setCart }) => {
             style={{
               textDecoration: "none",
               color: "#fff",
-              fontWeight: 600
+              fontWeight: 600,
             }}
           >
-            <button className="black-btn mt-3 w-100 py-3" style={{
-              borderRadius: "18px",
-              fontSize: "14px"
-            }}>
+            <button
+              className="black-btn mt-3 w-100 py-3"
+              style={{
+                borderRadius: "18px",
+                fontSize: "14px",
+              }}
+            >
               View Truck Location
             </button>
           </a>
