@@ -40,6 +40,29 @@ const Cart = ({ cart, setCart, location }) => {
     }
   };
 
+  if (cart.length === 0) {
+    return (
+      <div className="my-3">
+        <h1>Cart</h1>
+        <p>Your cart is empty.</p>
+        <button
+          className="black-btn mt-3"
+          style={{
+            width: "100%",
+            background: "transparent",
+            color: "black",
+            border: "1px solid black",
+          }}
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          Back to Home
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="my-3">
       <h1>Cart</h1>

@@ -55,7 +55,7 @@ const Home = ({ cart, setCart }) => {
 
   return (
     <div className="home py-2">
-      <div className="search-bar p-2 px-3">
+      <div className="search-bar p-2 px-3 d-flex align-items-center">
         <i className="fa-solid fa-magnifying-glass"></i>
         <input
           type="text"

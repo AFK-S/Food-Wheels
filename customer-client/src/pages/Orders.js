@@ -30,7 +30,7 @@ const Orders = () => {
                 </div>
                 <button className='black-btn mt-4 p-2' onClick={() => setRateModal(true)}>Give Feedback</button>
             </div>
-            <Modal opened={rateModal} onClose={() => setRateModal(false)} title="Give Feedback" className='rounded' centered>
+            <Modal opened={rateModal} onClose={() => setRateModal(false)} title="Give Feedback" centered >
                 <form onSubmit={form.onSubmit((values) => console.log(values))}>
                     <Select
                         style={{
