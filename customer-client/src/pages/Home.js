@@ -100,6 +100,16 @@ const Home = ({ cart, setCart }) => {
     return () => controller.abort();
   }, []);
 
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${day}-${month}-${year}`;
+  }
+
   const handleFacebookShare = () => {
     const shareUrl = "http://localhost:3000/"; // Replace with your website URL
     window.open(
@@ -298,17 +308,35 @@ const Home = ({ cart, setCart }) => {
             <p>{myQueue[0]?.queue + 1} in Queue</p>
           </div>
           <div className="d-flex align-items-center justify-content-between">
-            <p>Created At : {myQueue[0]?.createdAt}</p>
+            {/* <p>Created At : {myQueue[0]?.createdAt}</p> */}
+            <p>Created At : {formatDate(myQueue[0]?.createdAt)}</p>
             <p
               style={{
                 color: "green",
                 fontWeight: 600,
+                textTransform: "capitalize"
               }}
             >
               {myQueue[0]?.status}
             </p>
           </div>
-          <button className="black-btn mt-3 w-100">View Truck Location</button>
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${truckLocation.latitude},${truckLocation.longitude}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              textDecoration: "none",
+              color: "#fff",
+              fontWeight: 600
+            }}
+          >
+            <button className="black-btn mt-3 w-100 py-3" style={{
+              borderRadius: "18px",
+              fontSize: "14px"
+            }}>
+              View Truck Location
+            </button>
+          </a>
         </div>
       )}
 
