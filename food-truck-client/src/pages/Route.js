@@ -1,7 +1,13 @@
 import React from "react";
+import MapComponent from "../components/MapComponent/MapComponent";
 
 const Route = () => {
-  return <div>Route</div>;
+  console.log("Route.js");
+  return (
+
+    <MapComponent />
+  )
+
 };
 
 export default Route;

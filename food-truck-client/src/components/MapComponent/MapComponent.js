@@ -12,8 +12,8 @@ import { Vector as VectorSource } from "ol/source";
 import { Style, Icon, Circle, Fill, Stroke } from "ol/style";
 import axios from "axios";
 import { Select } from "@mantine/core";
-import pin from "./pin.png";
-import "./MapComponent.css";
+import pin from "../../pin.png";
+import "./Map.css";
 
 const MapComponent = () => {
     const [map, setMap] = useState(null);
@@ -23,7 +23,7 @@ const MapComponent = () => {
     const [disease, setDisease] = useState("");
     const [diseaseHotspots, setDiseaseHotspots] = useState([]);
 
-    const DEFAULT_COORDINATES = [72.8465408, 19.1987712];
+    const DEFAULT_COORDINATES = [72.8373538, 19.1071733];
 
     const createHospitalHotspot = (coordinates) => {
         const center = fromLonLat(coordinates);
@@ -57,7 +57,7 @@ const MapComponent = () => {
                 ],
                 view: new View({
                     center: fromLonLat(DEFAULT_COORDINATES),
-                    zoom: 12, // Initial zoom level before user location is obtained
+                    zoom: 12,
                 }),
             });
             setMap(newMap);
@@ -72,6 +72,14 @@ const MapComponent = () => {
                     }),
                 }),
             });
+
+            // Create a feature with a point geometry at the default coordinates
+            const defaultLocationFeature = new Feature({
+                geometry: new Point(fromLonLat(DEFAULT_COORDINATES)),
+            });
+
+            // Add the default location feature to the hospital vector layer
+            hospitalVectorLayer.getSource().addFeature(defaultLocationFeature);
 
             const diseaseVectorLayer = new VectorLayer({
                 source: new VectorSource(),
@@ -100,6 +108,7 @@ const MapComponent = () => {
             );
         }
     }, [map, setMapView]);
+
 
     useEffect(() => {
         if (hospitalVectorLayer) {
@@ -179,14 +188,15 @@ const MapComponent = () => {
         <>
             <Select
                 my="lg"
-                label="Select Disease"
-                placeholder="Select Disease"
+                label="Select Dish"
+                placeholder="Select Dish"
                 data={[
-                    { label: "Influenza (Flu)", value: "flu" },
-                    { label: "Common Cold", value: "Common Cold" },
-                    { label: "COVID-19", value: "COVID-19" },
-                    { label: "Measles", value: "Measles" },
-                    { label: "Chickenpox", value: "Chickenpox" },
+                    { label: "Burger", value: "burger" },
+                    { label: "Pizza", value: "pizza" },
+                    { label: "Pasta", value: "pasta" },
+                    { label: "Fries", value: "fries" },
+                    { label: "Ice Cream", value: "ice-cream" },
+                    { label: "Donut", value: "donut" },
                 ]}
                 value={disease}
                 onChange={(value) => {
@@ -196,7 +206,7 @@ const MapComponent = () => {
             />
             <div
                 className="map-container"
-                style={{ width: "1300px", height: "600px" }}
+                style={{ width: "100%", height: "600px" }}
             >
                 <div
                     id="map"
