@@ -363,6 +363,8 @@ exports.updateStatus = async (req, res, next) => {
       throw new ApiError(null, 404, "OrderNotFound");
     }
 
+    req.io.emit("Get_My_Queue", response.customer_id);
+
     return res.status(200).json(new ApiResponse(null, "Status updated", 200));
   } catch (err) {
     next(err);

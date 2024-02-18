@@ -4,6 +4,7 @@ import axios from "axios";
 import { Modal, Button } from '@mantine/core';
 
 import { useStateContext } from "../context/StateContext";
+import { useCookies } from "react-cookie";
 
 const Home = ({ cart, setCart }) => {
   const { socket } = useStateContext();
@@ -40,11 +41,13 @@ const Home = ({ cart, setCart }) => {
 
   const filters = ["All", "Veg", "Non-Veg", "Jain"];
 
+  const [cookies] = useCookies(["customer_id"]);
   const [dishes, setDishes] = useState([]);
   const [truckLocation, setTruckLocation] = useState({
     latitude: 0,
     longitude: 0,
   });
+  const [myQueue, setMyQueue] = useState([]);
 
   useEffect(() => {
     socket.on("Display_Truck_Location", (coordinates) => {
@@ -52,10 +55,17 @@ const Home = ({ cart, setCart }) => {
       setTruckLocation(coordinates);
     });
 
+    socket.on("Display_My_Queue", (queues) => {
+      console.log("My Queues ", queues);
+      setMyQueue(queues);
+    });
+
+    socket.emit("Get_My_Queue", cookies.customer_id);
     socket.emit("Get_Truck_Location");
 
     return () => {
       socket.off("Display_Truck_Location");
+      socket.off("Display_My_Queue");
     };
   }, []);
 
@@ -244,21 +254,25 @@ const Home = ({ cart, setCart }) => {
       </div>
 
       <div className="tracking-order">
-        <div className="d-flex align-items-center justify-content-between">
-          <p>Order ID : #1233</p>
-          <p>5th in Queue</p>
-        </div>
-        <div className="d-flex align-items-center justify-content-between">
-          <p>Created At : 12:45PM</p>
-          <p
-            style={{
-              color: "green",
-              fontWeight: 600,
-            }}
-          >
-            In Process
-          </p>
-        </div>
+        {myQueue.length !== 0 && (
+          <div className="d-flex align-items-center justify-content-between">
+            <p>Order ID : {myQueue[0].order_id}</p>
+            <p>{myQueue[0].queue}th in Queue</p>
+          </div>
+        )}
+        {myQueue.length !== 0 && (
+          <div className="d-flex align-items-center justify-content-between">
+            <p>Created At : {myQueue[0].createdAt}</p>
+            <p
+              style={{
+                color: "green",
+                fontWeight: 600,
+              }}
+            >
+              {myQueue[0].status}
+            </p>
+          </div>
+        )}
         <button className="black-btn mt-3 w-100">View Truck Location</button>
       </div>
       <Modal opened={shareModal} onClose={() => {
