@@ -62,7 +62,7 @@ const socket = (io) => {
         };
       });
 
-      io.emit("Display_My_Queue", queue);
+      socket.emit("Display_My_Queue", queue);
     });
 
     socket.on("disconnect", async () => {
