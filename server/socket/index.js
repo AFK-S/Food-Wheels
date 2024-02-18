@@ -16,6 +16,7 @@ const socket = (io) => {
     });
 
     socket.on("Order_Placed", async () => {
+      console.log("Order placed");
       io.emit("Fetch_Orders");
     });
 

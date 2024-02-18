@@ -1,10 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Badge } from "@mantine/core";
 import axios from "axios";
+import { useStateContext } from "../context/StateContext";
 
 const Dashboard = () => {
+  const { socket } = useStateContext();
+
   const [pendingOrders, setPendingOrders] = useState([]);
   const [completedOrders, setCompletedOrders] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+
+  useEffect(() => {
+    socket.on("Fetch_Orders", async () => {
+      setRefresh((prev) => !prev);
+    });
+
+    return () => {
+      socket.off("Fetch_Orders");
+    };
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -22,7 +36,7 @@ const Dashboard = () => {
       }
     })();
     return () => controller.abort();
-  }, []);
+  }, [refresh]);
 
   const handleStatus = async (order_id, status) => {
     try {
@@ -103,29 +117,22 @@ const Dashboard = () => {
                   <thead>
                     <tr>
                       <th scope="col">#</th>
-                      <th scope="col">First</th>
-                      <th scope="col">Last</th>
-                      <th scope="col">Handle</th>
+                      <th scope="col">Customer Name</th>
+                      <th scope="col">Total Order</th>
+                      <th scope="col">Total Price</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <th scope="row">1</th>
-                      <td>Mark</td>
-                      <td>Otto</td>
-                      <td>@mdo</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">2</th>
-                      <td>Jacob</td>
-                      <td>Thornton</td>
-                      <td>@fat</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">3</th>
-                      <td colSpan="2">Larry the Bird</td>
-                      <td>@twitter</td>
-                    </tr>
+                    {completedOrders.map((order) => {
+                      return (
+                        <tr key={order._id}>
+                          <th scope="row">{order._id}</th>
+                          <td>{order.customer_name}</td>
+                          <td>{order.items.length}</td>
+                          <td>{order.total}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

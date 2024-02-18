@@ -6,7 +6,7 @@ exports.todayOrders = async (req, res, next) => {
     const order_completed = await OrderSchema.aggregate([
       {
         $match: {
-          status: "completed",
+          status: "delivered",
           createdAt: {
             $gte: new Date(new Date().setHours(00, 00, 00)),
             $lt: new Date(new Date().setHours(23, 59, 59)),
@@ -98,7 +98,7 @@ exports.todayOrders = async (req, res, next) => {
       {
         $match: {
           status: {
-            $nin: ["completed", "cancelled"],
+            $nin: ["delivered", "cancelled"],
           },
           createdAt: {
             $gte: new Date(new Date().setHours(00, 00, 00)),
