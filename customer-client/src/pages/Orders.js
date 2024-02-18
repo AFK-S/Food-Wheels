@@ -65,9 +65,24 @@ const Orders = () => {
 
   return (
     <div className="orders">
-      <h4 className="my-3">My Orders</h4>
+      <div className="d-flex align-items-center">
+        <button
+          className="black-btn me-2 d-flex align-items-center justify-content-center"
+          onClick={() => {
+            navigate("/");
+          }}
+          style={{
+            width: "40px",
+            height: "40px",
+            textAlign: "center"
+          }}
+        >
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <h4 className="my-3">My Orders</h4>
+      </div>
       {orders.map((order) => (
-        <div className="order-cards p-3" key={order._id}>
+        <div className="order-cards p-3 my-3" key={order._id}>
           <div className="d-flex align-items-center justify-content-between">
             <p style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Order ID: {order._id}</p>
 
@@ -127,22 +142,7 @@ const Orders = () => {
           <button className="black-btn mt-3">Submit</button>
         </form>
       </Modal>
-      <button
-        className="black-btn"
-        onClick={() => {
-          navigate("/");
-        }}
-        style={{
-          position: "fixed",
-          bottom: "1rem",
-          left: 0,
-          right: 0,
-          width: "90%",
-          margin: "0 auto",
-        }}
-      >
-        Back to Home
-      </button>
+
     </div>
   );
 };
