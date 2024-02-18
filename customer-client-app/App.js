@@ -11,6 +11,7 @@ import {
   LogBox,
 } from "react-native";
 import { WebView } from "react-native-webview";
+import * as Location from 'expo-location'; // Import Location module
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -46,6 +47,18 @@ export default function App() {
       Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
+
+  useEffect(() => {
+    getLocationPermission(); // Request location permission when component mounts
+  }, []);
+
+  async function getLocationPermission() {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.error('Location permission not granted');
+      return;
+    }
+  }
 
   async function onMessage(event) {
     const data = event.nativeEvent.data;

@@ -17,19 +17,24 @@ const Cart = ({ cart, setCart, location }) => {
     return totalPrice;
   };
 
+
+
+  const tempLocation = {
+    latitude: 19.1071733,
+    longitude: 72.8373538
+  }
+
   const handleBookNow = async () => {
     try {
       const { data } = await axios.post("/api/order", {
         customer_id: cookies.customer_id,
-        items: cart.map((item) => {
-          return {
-            dish_id: item._id,
-            quantity: 1,
-            billing_price: item.price.discounted || item.price.original,
-          };
-        }),
+        items: cart.map((item) => ({
+          dish_id: item._id,
+          quantity: 1,
+          billing_price: item.price.discounted || item.price.original,
+        })),
         total: calculateTotalPrice(),
-        coordinates: location,
+        coordinates: location.latitude && location.longitude ? location : tempLocation,
         note: instructions
       });
       console.log(data.data);
@@ -39,6 +44,7 @@ const Cart = ({ cart, setCart, location }) => {
       alert(err.response?.data?.message || err.message || err);
     }
   };
+
 
   if (cart.length === 0) {
     return (
