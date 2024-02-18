@@ -151,57 +151,63 @@ const Dashboard = () => {
                 className="orders-scroll"
                 style={{ height: "87%", overflow: "auto" }}
               >
-                {pendingOrders.map((order) => {
-                  console.log(order);
-                  return (
-                    <div
-                      key={order._id}
-                      className="c-card mt-2 order-cards mb-4"
-                    >
-                      <h6>Order ID : #{order._id}</h6>
-                      <div className="order-list my-2 ps-2 ms-2">
-                        {order.items.map((item) => (
-                          <p key={item.dish_id}>
-                            {item.dish_name} (x {item.quantity})
-                          </p>
-                        ))}
+                {pendingOrders
+                  .filter((order) => {
+                    return order.status !== "delivered";
+                  })
+                  .map((order) => {
+                    console.log(order);
+                    return (
+                      <div
+                        key={order._id}
+                        className="c-card mt-2 order-cards mb-4"
+                      >
+                        <h6>Order ID : #{order._id}</h6>
+                        <div className="order-list my-2 ps-2 ms-2">
+                          {order.items.map((item) => (
+                            <p key={item.dish_id}>
+                              {item.dish_name} (x {item.quantity})
+                            </p>
+                          ))}
+                        </div>
+                        <div className="timeline d-flex align-items-center justify-content-between mt-3">
+                          <div
+                            className={`dot ${
+                              order.status === "placed" ? "active" : ""
+                            }`}
+                          >
+                            <i className="fa-solid fa-hourglass-start"></i>
+                          </div>
+                          <div className="line"></div>
+                          <div
+                            className={`dot ${
+                              order.status === "preparing" ? "active" : ""
+                            }`}
+                          >
+                            <i className="fa-solid fa-box"></i>
+                          </div>
+                          <div className="line"></div>
+                          <div
+                            className={`dot ${
+                              order.status === "delivered" ? "active" : ""
+                            }`}
+                          >
+                            <i className="fa-solid fa-check"></i>
+                          </div>
+                        </div>
+                        {order.status !== "delivered" && (
+                          <button
+                            className="black-btn mt-3"
+                            onClick={() =>
+                              handleStatus(order._id, order.status)
+                            }
+                          >
+                            Next
+                          </button>
+                        )}
                       </div>
-                      <div className="timeline d-flex align-items-center justify-content-between mt-3">
-                        <div
-                          className={`dot ${
-                            order.status === "placed" ? "active" : ""
-                          }`}
-                        >
-                          <i className="fa-solid fa-hourglass-start"></i>
-                        </div>
-                        <div className="line"></div>
-                        <div
-                          className={`dot ${
-                            order.status === "preparing" ? "active" : ""
-                          }`}
-                        >
-                          <i className="fa-solid fa-box"></i>
-                        </div>
-                        <div className="line"></div>
-                        <div
-                          className={`dot ${
-                            order.status === "delivered" ? "active" : ""
-                          }`}
-                        >
-                          <i className="fa-solid fa-check"></i>
-                        </div>
-                      </div>
-                      {order.status !== "delivered" && (
-                        <button
-                          className="black-btn mt-3"
-                          onClick={() => handleStatus(order._id, order.status)}
-                        >
-                          Next
-                        </button>
-                      )}
-                    </div>
-                  );
-                })}
+                    );
+                  })}
               </div>
             </div>
           </div>
