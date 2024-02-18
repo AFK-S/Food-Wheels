@@ -69,7 +69,8 @@ const Orders = () => {
       {orders.map((order) => (
         <div className="order-cards p-3" key={order._id}>
           <div className="d-flex align-items-center justify-content-between">
-            <p>Order ID : {order._id}</p>
+            <p style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Order ID: {order._id}</p>
+
             <p>{order.createdAt}</p>
           </div>
           {order.items.map((item) => (
