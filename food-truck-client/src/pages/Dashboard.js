@@ -156,7 +156,6 @@ const Dashboard = () => {
                     return order.status !== "delivered";
                   })
                   .map((order) => {
-                    console.log(order);
                     return (
                       <div
                         key={order._id}
