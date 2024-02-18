@@ -47,7 +47,7 @@ const StateProvider = ({ children }) => {
       watchId = navigator.geolocation.watchPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          console.log("location chnaged");
+          console.log("location changed");
           setLocation({
             latitude,
             longitude,

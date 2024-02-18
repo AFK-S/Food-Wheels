@@ -74,6 +74,17 @@ const StateProvider = ({ children }) => {
     };
   }, [isSocketConnected]);
 
+  useEffect(() => {
+    if (!isSocketConnected) return;
+    socket.on("Display_Truck_Location", (coordinates) => {
+      console.log("Display_Truck_Location", coordinates);
+    });
+
+    return () => {
+      socket.off("Display_Truck_Location");
+    };
+  }, [isSocketConnected]);
+
   const toggleLoading = (state) => {
     setLoading(state);
   };
