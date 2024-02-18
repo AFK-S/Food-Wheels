@@ -20,6 +20,14 @@ router.post(
   "/",
   body("customer_id").trim().notEmpty().withMessage("Customer ID is required"),
   body("total").trim().notEmpty().withMessage("Total is required"),
+  body("coordinates.latitude")
+    .trim()
+    .notEmpty()
+    .withMessage("Coordinates Latitude is required"),
+  body("coordinates.longitude")
+    .trim()
+    .notEmpty()
+    .withMessage("Coordinates Longitude is required"),
   fieldHandler,
   create
 );

@@ -47,6 +47,13 @@ const OrderSchema = new Schema(
       default: 0,
       max: 5,
     },
+    coordinates: {
+      type: Object,
+      default: {
+        latitude: 0,
+        longitude: 0,
+      },
+    },
   },
   {
     timestamps: true,
