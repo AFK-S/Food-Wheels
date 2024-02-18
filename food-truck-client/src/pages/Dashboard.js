@@ -199,7 +199,9 @@ const Dashboard = () => {
                         key={order._id}
                         className="c-card mt-2 order-cards mb-4"
                       >
-                        <h6>Order ID : #{order._id}</h6>
+                        <h6 style={{
+                          fontSize: "0.9rem"
+                        }}>Order ID : #{order._id}</h6>
                         <div className="order-list my-2 ps-2 ms-2">
                           {order.items.map((item) => (
                             <p key={item.dish_id}>
