@@ -144,12 +144,15 @@ const Dashboard = () => {
               style={{ overflow: "hidden" }}
             >
               <div className="p-4 py-3 pb-2">
-                <h3>Orders Pending ({
-                  pendingOrders.filter((order) => {
-                    return order.status !== "delivered";
-                  }).length
-                }
-                  ){" "}) </h3>
+                <h3>
+                  Orders Pending (
+                  {
+                    pendingOrders.filter((order) => {
+                      return order.status !== "delivered";
+                    }).length
+                  }
+                  )
+                </h3>
                 <div className="divider my-2"></div>
               </div>
               <div
@@ -176,22 +179,25 @@ const Dashboard = () => {
                         </div>
                         <div className="timeline d-flex align-items-center justify-content-between mt-3">
                           <div
-                            className={`dot ${order.status === "placed" ? "active" : ""
-                              }`}
+                            className={`dot ${
+                              order.status === "placed" ? "active" : ""
+                            }`}
                           >
                             <i className="fa-solid fa-hourglass-start"></i>
                           </div>
                           <div className="line"></div>
                           <div
-                            className={`dot ${order.status === "preparing" ? "active" : ""
-                              }`}
+                            className={`dot ${
+                              order.status === "preparing" ? "active" : ""
+                            }`}
                           >
                             <i className="fa-solid fa-box"></i>
                           </div>
                           <div className="line"></div>
                           <div
-                            className={`dot ${order.status === "delivered" ? "active" : ""
-                              }`}
+                            className={`dot ${
+                              order.status === "delivered" ? "active" : ""
+                            }`}
                           >
                             <i className="fa-solid fa-check"></i>
                           </div>

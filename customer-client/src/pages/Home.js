@@ -64,6 +64,14 @@ const Home = ({ cart, setCart }) => {
       socket.emit("Get_My_Queue", cookies.customer_id);
     });
 
+    socket.on("Send_Push_Notification", (details) => {
+      if (window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage(JSON.stringify(details));
+      } else {
+        alert(`${details.title}: ${details.body}`);
+      }
+    });
+
     socket.emit("Get_My_Queue", cookies.customer_id);
     socket.emit("Get_Truck_Location");
 
@@ -71,6 +79,7 @@ const Home = ({ cart, setCart }) => {
       socket.off("Display_Truck_Location");
       socket.off("Display_My_Queue");
       socket.off("Update_My_Queue");
+      socket.off("Send_Push_Notification");
     };
   }, []);
 
@@ -275,12 +284,14 @@ const Home = ({ cart, setCart }) => {
       {myQueue?.length !== 0 && (
         <div className="tracking-order">
           <div className="d-flex align-items-center justify-content-between">
-            <p style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              width: "50vw"
-            }}>
+            <p
+              style={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                width: "50vw",
+              }}
+            >
               Order ID : {myQueue[0]?.order_id}
             </p>
 
@@ -299,8 +310,7 @@ const Home = ({ cart, setCart }) => {
           </div>
           <button className="black-btn mt-3 w-100">View Truck Location</button>
         </div>
-      )
-      }
+      )}
 
       <Modal
         opened={shareModal}
@@ -321,7 +331,7 @@ const Home = ({ cart, setCart }) => {
           </button>
         </div>
       </Modal>
-    </div >
+    </div>
   );
 };
 

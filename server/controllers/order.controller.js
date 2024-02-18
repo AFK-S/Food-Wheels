@@ -364,6 +364,10 @@ exports.updateStatus = async (req, res, next) => {
     }
 
     req.io.emit("Update_My_Queue");
+    req.io.emit("Send_Push_Notification", {
+      title: "Order Status Updated",
+      body: `your order status is ${status}`,
+    });
 
     return res.status(200).json(new ApiResponse(null, "Status updated", 200));
   } catch (err) {

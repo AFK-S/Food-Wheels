@@ -27,14 +27,14 @@ const socket = (io) => {
       );
     });
 
-    socket.on("Push_Notification", async (details) => {
-      io.emit("Send_Notification", {
-        type: "expo",
-        title: "title",
-        body: "body",
-        data: { data: "goes here" },
-      });
-    });
+    // socket.on("Push_Notification", async (details) => {
+    //   io.emit("Send_Notification", {
+    //     type: "expo",
+    //     title: "title",
+    //     body: "body",
+    //     data: { data: "goes here" },
+    //   });
+    // });
 
     // socket.on("Order_Placed", async () => {
     //   io.emit("Fetch_Orders");

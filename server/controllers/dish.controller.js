@@ -32,6 +32,13 @@ exports.create = async (req, res, next) => {
       is_signature: is_signature,
     });
 
+    if (is_signature) {
+      req.io.emit("Send_Push_Notification", {
+        title: `New Signature Dish at ${discount}`,
+        body: `New ${name} Signature Dish is added to the menu`,
+      });
+    }
+
     return res
       .status(201)
       .json(new ApiResponse(dish, "Dish created successfully", 201));
