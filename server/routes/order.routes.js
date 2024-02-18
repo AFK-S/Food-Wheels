@@ -63,7 +63,7 @@ router.delete(
 );
 
 router.post(
-  "/feedback-rating",
+  "/feedback-rating/:order_id",
   param("order_id").trim().notEmpty().withMessage("Order ID is required"),
   body("feedback").trim().notEmpty().withMessage("Feedback is required"),
   body("rating").trim().notEmpty().withMessage("Rating is required"),

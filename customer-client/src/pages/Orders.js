@@ -39,7 +39,6 @@ const Orders = () => {
           }
         );
         setOrders(data.data);
-        console.log(data.data);
       } catch (err) {
         if (err.name === "CanceledError") return;
         alert(err.response?.data?.message || err.message || err);
@@ -48,15 +47,17 @@ const Orders = () => {
     return () => controller.abort();
   }, []);
 
-  const handleFeedback = async (order_id) => {
-    setRateModal(true);
+  const [orderID, setOrderID] = useState("");
+
+  const handleFeedback = async () => {
     try {
-      await axios.post(`/api/order/feedback-rating/${order_id}`, {
+      await axios.post(`/api/order/feedback-rating/${orderID}`, {
         feedback: form.values.feedback,
         rating: form.values.rate,
         sector: form.values.sector,
       });
       form.reset();
+      setOrderID("");
     } catch (err) {
       alert(err.response?.data?.message || err.message || err);
     }
@@ -74,7 +75,7 @@ const Orders = () => {
           style={{
             width: "40px",
             height: "40px",
-            textAlign: "center"
+            textAlign: "center",
           }}
         >
           <i class="fa-solid fa-chevron-left"></i>
@@ -84,7 +85,15 @@ const Orders = () => {
       {orders.map((order) => (
         <div className="order-cards p-3 my-3" key={order._id}>
           <div className="d-flex align-items-center justify-content-between">
-            <p style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Order ID: {order._id}</p>
+            <p
+              style={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              Order ID: {order._id}
+            </p>
 
             <p>{order.createdAt}</p>
           </div>
@@ -95,7 +104,13 @@ const Orders = () => {
               </p>
             </div>
           ))}
-          <button className="black-btn mt-4 p-2" onClick={handleFeedback}>
+          <button
+            className="black-btn mt-4 p-2"
+            onClick={() => {
+              setRateModal(true);
+              setOrderID(order._id);
+            }}
+          >
             Give Feedback
           </button>
         </div>
@@ -106,7 +121,7 @@ const Orders = () => {
         title="Give Feedback"
         centered
       >
-        <form onSubmit={form.onSubmit((values) => console.log(values))}>
+        <form onSubmit={form.onSubmit(handleFeedback)}>
           <Select
             style={{
               borderRadius: "20px",
@@ -136,13 +151,12 @@ const Orders = () => {
             radius="md"
             autosize
             minRows={6}
-            placeholder="your@email.com"
+            placeholder="Your feedback here..."
             {...form.getInputProps("feedback")}
           />
           <button className="black-btn mt-3">Submit</button>
         </form>
       </Modal>
-
     </div>
   );
 };
