@@ -20,6 +20,7 @@ const MainLayout = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+
   // useEffect(() => {
   //   if (!cookies.token || !cookies.userId) {
   //     removeCookie("token");
